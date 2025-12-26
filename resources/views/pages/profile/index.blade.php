@@ -53,14 +53,45 @@
                         <p class="text-slate-400 italic text-sm mt-4">No bio added yet</p>
                     @endif
 
-                    {{-- Tech Stack (Display Only as Chips) --}}
+                    {{-- Tech Stack: Badge + Progress Bar + Hover Tooltip --}}
                     @if($user->skills->count() > 0)
                         <div class="mt-6 pt-6 border-t border-slate-100">
-                            <div class="flex flex-wrap justify-center gap-2">
+                            <div class="flex flex-wrap justify-center gap-4">
                                 @foreach($user->skills as $skill)
-                                    <span class="px-3 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200 hover:border-blue-300 transition-colors" title="{{ $skill->level_label }}">
-                                        {{ $skill->tech_name }}
-                                    </span>
+                                    @php
+                                        $level = \App\Enums\SkillLevel::fromValue($skill->level);
+                                        $levelLabel = $level->label();
+                                        $levelPercent = $level->percent();
+                                        $levelGradient = $level->gradient();
+                                    @endphp
+                                    <div class="flex flex-col items-center w-20">
+                                        {{-- Skill Badge --}}
+                                        <span class="px-3 py-1 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200 mb-2 truncate max-w-full">
+                                            {{ $skill->tech_name }}
+                                        </span>
+                                        
+                                        {{-- Progress Bar with Hover Tooltip --}}
+                                        <div class="group relative w-full">
+                                            {{-- Hover Tooltip (Gen Z style) --}}
+                                            <div class="absolute -top-9 left-1/2 -translate-x-1/2 px-3 py-1.5
+                                                        bg-slate-900/95 backdrop-blur-sm text-white text-xs font-semibold rounded-lg
+                                                        opacity-0 scale-90 translate-y-1
+                                                        group-hover:opacity-100 group-hover:scale-100 group-hover:translate-y-0
+                                                        transition-all duration-200 ease-out pointer-events-none z-30
+                                                        whitespace-nowrap shadow-lg border border-slate-700">
+                                                {{ $levelLabel }}
+                                                {{-- Arrow --}}
+                                                <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-slate-900 border-r border-b border-slate-700 rotate-45"></div>
+                                            </div>
+                                            
+                                            {{-- Progress Bar --}}
+                                            <div class="h-2 bg-slate-200 rounded-full overflow-hidden cursor-pointer 
+                                                        group-hover:scale-110 group-hover:shadow-md transition-transform duration-200">
+                                                <div class="h-full rounded-full {{ $levelGradient }} transition-all duration-300" 
+                                                     style="width: {{ $levelPercent }}%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 @endforeach
                             </div>
                         </div>

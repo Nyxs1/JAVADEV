@@ -30,31 +30,71 @@
                 <input type="file" name="profile_picture" id="profile_picture" accept="image/jpeg,image/jpg,image/png,image/gif" class="hidden">
                 <input type="hidden" name="cropped_avatar" id="cropped_avatar" value="">
                 <input type="hidden" name="remove_avatar" id="remove_avatar" value="0">
-                <canvas id="avatar-canvas" class="hidden" width="256" height="256"></canvas>
+                <canvas id="avatar-canvas" class="hidden" width="768" height="256"></canvas>
             </div>
 
-            {{-- Zoom Controls --}}
-            <div id="avatar-zoom-container" class="flex items-center justify-center gap-4 {{ $hasAvatar ? '' : 'hidden' }}">
-                <button type="button" id="avatar-change" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2">
+            {{-- ======================================= --}}
+            {{-- PHOTO CONTROLS (Gen Z Style) --}}
+            {{-- ======================================= --}}
+            <div id="avatar-zoom-container" class="flex flex-wrap items-center justify-center gap-3 {{ $hasAvatar ? '' : 'hidden' }}">
+                {{-- Change Button --}}
+                <button type="button" id="avatar-change" 
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-slate-200 text-slate-700 
+                           rounded-xl text-sm font-medium hover:bg-slate-50 hover:border-slate-300 
+                           transition-all duration-200 shadow-sm hover:shadow">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
-                    Change
+                    <span>Ganti</span>
                 </button>
-                <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/></svg>
-                    <input type="range" id="avatar-zoom" min="60" max="250" value="100" class="w-32 h-1 bg-slate-200 rounded-full appearance-none cursor-pointer accent-blue-600">
-                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/></svg>
+
+                {{-- Zoom Slider (Glassmorphism style) --}}
+                <div class="flex items-center gap-2 px-4 py-2.5 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl shadow-sm">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7"/>
+                    </svg>
+                    <input type="range" id="avatar-zoom" min="60" max="200" value="100" 
+                        class="w-28 h-1.5 bg-gradient-to-r from-slate-200 to-slate-300 rounded-full appearance-none cursor-pointer
+                               [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
+                               [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-gradient-to-br 
+                               [&::-webkit-slider-thumb]:from-blue-500 [&::-webkit-slider-thumb]:to-indigo-600 
+                               [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
+                               [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110">
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"/>
+                    </svg>
                 </div>
-                <button type="button" id="avatar-reset" class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                    Reset
+
+                {{-- Reset Button --}}
+                <button type="button" id="avatar-reset" 
+                    class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-600 
+                           rounded-xl text-sm font-medium hover:bg-slate-200 
+                           transition-all duration-200">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <span>Reset</span>
                 </button>
-                <button type="button" id="avatar-delete" class="px-4 py-2 bg-white border border-red-200 text-red-600 rounded-lg text-sm font-medium hover:bg-red-50 transition-colors flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    Remove
+
+                {{-- Remove Button (Gen Z Style - Pill with gradient hover) --}}
+                <button type="button" id="avatar-delete" 
+                    class="group inline-flex items-center gap-2 px-4 py-2.5 
+                           bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 
+                           text-red-600 rounded-xl text-sm font-medium 
+                           hover:from-red-500 hover:to-pink-500 hover:text-white hover:border-transparent
+                           hover:shadow-lg hover:shadow-red-500/25
+                           transition-all duration-300 ease-out">
+                    <svg class="w-4 h-4 transition-transform group-hover:scale-110 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    </svg>
+                    <span class="group-hover:tracking-wide transition-all">Hapus</span>
                 </button>
             </div>
+            
+            {{-- Error Display --}}
             <p id="avatar-error" class="text-center text-sm text-red-500 hidden"></p>
 
             {{-- ======================================= --}}
@@ -107,7 +147,10 @@
                 <a href="{{ route('profile.index') }}" class="px-5 py-2.5 text-slate-600 font-medium hover:text-slate-900 transition-colors">
                     Cancel
                 </a>
-                <button type="submit" id="save-profile-btn" class="px-8 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-medium shadow-sm hover:shadow-md">
+                <button type="submit" id="save-profile-btn" 
+                    class="px-8 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl 
+                           hover:from-blue-700 hover:to-indigo-700 transition-all font-medium 
+                           shadow-md hover:shadow-lg hover:shadow-blue-500/25">
                     Save Profile
                 </button>
             </div>
@@ -133,193 +176,6 @@
         if (middleToggle && middleField) {
             middleToggle.addEventListener('change', () => {
                 middleField.classList.toggle('hidden', !middleToggle.checked);
-            });
-        }
-
-        // ========================================
-        // PHOTO DROPZONE + EDITOR
-        // ========================================
-        const dropzone = document.getElementById('avatar-dropzone');
-        const fileInput = document.getElementById('profile_picture');
-        const img = document.getElementById('avatar-img');
-        const blurImg = document.getElementById('avatar-blur-img');
-        const imgContainer = document.getElementById('avatar-img-container');
-        const blurContainer = document.getElementById('avatar-blur-bg-container');
-        const placeholder = document.getElementById('avatar-placeholder');
-        const circleMask = document.getElementById('avatar-circle-mask');
-        const dropOverlay = document.getElementById('avatar-drop-overlay');
-        const zoomContainer = document.getElementById('avatar-zoom-container');
-        const zoomSlider = document.getElementById('avatar-zoom');
-        const removeInput = document.getElementById('remove_avatar');
-        const croppedInput = document.getElementById('cropped_avatar');
-        
-        // Buttons
-        const changeBtn = document.getElementById('avatar-change');
-        const resetBtn = document.getElementById('avatar-reset');
-        const deleteBtn = document.getElementById('avatar-delete');
-
-        const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
-        let currentObjectURL = null;
-
-        // --- DROPZONE CLICK -> OPEN FILE PICKER ---
-        if (dropzone && fileInput) {
-            dropzone.addEventListener('click', (e) => {
-                // Don't trigger if clicking on buttons or when image exists (let pan work)
-                if (e.target.closest('button')) return;
-                fileInput.click();
-            });
-        }
-
-        // --- FILE INPUT CHANGE -> PREVIEW ---
-        if (fileInput) {
-            fileInput.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) handleFile(file);
-            });
-        }
-
-        // --- DRAG & DROP EVENTS ---
-        if (dropzone) {
-            dropzone.addEventListener('dragenter', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (dropOverlay) dropOverlay.classList.remove('opacity-0');
-            });
-
-            dropzone.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (dropOverlay) dropOverlay.classList.remove('opacity-0');
-            });
-
-            dropzone.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (dropOverlay) dropOverlay.classList.add('opacity-0');
-            });
-
-            dropzone.addEventListener('drop', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (dropOverlay) dropOverlay.classList.add('opacity-0');
-                
-                const file = e.dataTransfer.files[0];
-                if (file) handleFile(file);
-            });
-        }
-
-        // --- HANDLE FILE (shared by click and drop) ---
-        function handleFile(file) {
-            // Validate type
-            if (!ALLOWED_TYPES.includes(file.type)) {
-                alert('Please upload JPG, PNG, or GIF image');
-                return;
-            }
-            
-            // Validate size
-            if (file.size > MAX_SIZE) {
-                alert('File too large. Maximum 5MB.');
-                return;
-            }
-
-            // Revoke old URL
-            if (currentObjectURL) {
-                URL.revokeObjectURL(currentObjectURL);
-            }
-
-            // Create preview URL
-            currentObjectURL = URL.createObjectURL(file);
-            
-            // Show image in preview
-            if (img) {
-                img.src = currentObjectURL;
-                img.onload = () => {
-                    // Show image container, hide placeholder
-                    if (imgContainer) imgContainer.classList.remove('hidden');
-                    if (blurContainer) blurContainer.classList.remove('hidden');
-                    if (placeholder) placeholder.classList.add('hidden');
-                    if (circleMask) circleMask.classList.remove('hidden');
-                    if (zoomContainer) zoomContainer.classList.remove('hidden');
-                    
-                    // Update blur background
-                    if (blurImg) {
-                        blurImg.src = currentObjectURL;
-                        blurImg.classList.remove('hidden');
-                    }
-                    
-                    // Center the image
-                    const frameW = dropzone.offsetWidth;
-                    const frameH = dropzone.offsetHeight;
-                    const imgW = img.naturalWidth;
-                    const imgH = img.naturalHeight;
-                    
-                    // Calculate cover scale
-                    const coverScale = Math.max(frameW / imgW, frameH / imgH);
-                    
-                    img.style.width = imgW + 'px';
-                    img.style.height = imgH + 'px';
-                    img.style.transform = `translate(-50%, -50%) scale(${coverScale})`;
-                    
-                    // Reset zoom slider
-                    if (zoomSlider) zoomSlider.value = 100;
-                    
-                    // Clear remove flag
-                    if (removeInput) removeInput.value = '0';
-                };
-            }
-        }
-
-        // --- CHANGE BUTTON -> OPEN FILE PICKER ---
-        if (changeBtn && fileInput) {
-            changeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                fileInput.click();
-            });
-        }
-
-        // --- RESET BUTTON -> RESET ZOOM ---
-        if (resetBtn && zoomSlider) {
-            resetBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                zoomSlider.value = 100;
-                zoomSlider.dispatchEvent(new Event('input'));
-            });
-        }
-
-        // --- DELETE BUTTON -> REMOVE IMAGE ---
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (!confirm('Remove your profile photo?')) return;
-                
-                // Mark for removal
-                if (removeInput) removeInput.value = '1';
-                
-                // Hide image elements
-                if (imgContainer) imgContainer.classList.add('hidden');
-                if (blurContainer) blurContainer.classList.add('hidden');
-                if (circleMask) circleMask.classList.add('hidden');
-                if (zoomContainer) zoomContainer.classList.add('hidden');
-                
-                // Show placeholder
-                if (placeholder) placeholder.classList.remove('hidden');
-                
-                // Clear image
-                if (img) img.src = '';
-                if (blurImg) blurImg.src = '';
-                
-                // Clear file input
-                if (fileInput) fileInput.value = '';
-                
-                // Clear cropped avatar
-                if (croppedInput) croppedInput.value = '';
-                
-                // Revoke URL
-                if (currentObjectURL) {
-                    URL.revokeObjectURL(currentObjectURL);
-                    currentObjectURL = null;
-                }
             });
         }
     });
