@@ -1,0 +1,213 @@
+/* =========================================
+   ERROR PAGE STYLES
+   Consistent design for 403, 404, 419, 429, 500
+   ========================================= */
+
+/* =========================
+   ERROR BODY & LAYOUT
+   ========================= */
+.error-body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #eef6ff;
+    background-image: radial-gradient(
+        circle,
+        rgba(59, 130, 246, 0.2) 2px,
+        transparent 2px
+    );
+    background-size: 30px 30px;
+    animation: dotSlide 8s ease-in-out infinite;
+}
+
+@keyframes dotSlide {
+    0%,
+    100% {
+        background-position: 0px 0px;
+    }
+    50% {
+        background-position: 30px 30px;
+    }
+}
+
+/* =========================
+   ERROR CARD
+   ========================= */
+.error-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 48px 40px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+}
+
+/* =========================
+   ERROR ICON
+   ========================= */
+.error-icon {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-icon img {
+    width: 48px;
+    height: 48px;
+}
+
+/* Icon color variants */
+.error-icon--red {
+    background: #fef2f2;
+}
+
+.error-icon--red img {
+    filter: brightness(0) saturate(100%) invert(44%) sepia(89%) saturate(1827%)
+        hue-rotate(338deg) brightness(98%) contrast(92%);
+}
+
+.error-icon--yellow {
+    background: #fffbeb;
+}
+
+.error-icon--yellow img {
+    filter: brightness(0) saturate(100%) invert(67%) sepia(68%) saturate(588%)
+        hue-rotate(2deg) brightness(103%) contrast(97%);
+}
+
+.error-icon--blue {
+    background: #eff6ff;
+}
+
+.error-icon--blue img {
+    filter: brightness(0) saturate(100%) invert(36%) sepia(93%) saturate(1815%)
+        hue-rotate(212deg) brightness(97%) contrast(91%);
+}
+
+/* =========================
+   ERROR CODE
+   ========================= */
+.error-code {
+    font-size: 72px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    line-height: 1;
+}
+
+/* =========================
+   ERROR TITLE & MESSAGE
+   ========================= */
+.error-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 12px;
+}
+
+.error-message {
+    font-size: 16px;
+    color: #6b7280;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+/* =========================
+   ERROR ACTIONS
+   ========================= */
+.error-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.error-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 24px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.error-btn--primary {
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.error-btn--primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+.error-btn--secondary {
+    background: #fff;
+    color: #374151;
+    border: 1.5px solid #d1d5db;
+}
+
+.error-btn--secondary:hover {
+    background: #f9fafb;
+    border-color: #9ca3af;
+}
+
+.error-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+.error-btn--primary img {
+    filter: brightness(0) invert(1);
+}
+
+.error-btn--secondary img {
+    filter: brightness(0) saturate(100%) invert(36%) sepia(93%) saturate(1815%)
+        hue-rotate(212deg) brightness(97%) contrast(91%);
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 480px) {
+    .error-card {
+        padding: 32px 24px;
+        margin: 16px;
+    }
+
+    .error-code {
+        font-size: 56px;
+    }
+
+    .error-title {
+        font-size: 20px;
+    }
+
+    .error-icon {
+        width: 80px;
+        height: 80px;
+    }
+
+    .error-icon img {
+        width: 40px;
+        height: 40px;
+    }
+}

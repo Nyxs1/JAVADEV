@@ -1,0 +1,331 @@
+/* ============================= */
+/* PROFILE PAGE STYLES           */
+/* ============================= */
+
+/* Profile Card */
+.profile-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    border: 1px solid rgb(226 232 240);
+    overflow: hidden;
+}
+
+/* Profile Header */
+.profile-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    padding: 2rem 1.5rem;
+}
+
+.profile-avatar {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+}
+
+.profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-avatar-initial {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: white;
+}
+
+/* Role Badge */
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Edit Button (Disabled) */
+.edit-button-disabled {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Profile Details */
+.profile-details {
+    padding: 1.5rem;
+}
+
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: rgb(15 23 42);
+    border-bottom: 1px solid rgb(226 232 240);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.field-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(51 65 85);
+    margin-bottom: 0.25rem;
+}
+
+.field-value {
+    color: rgb(15 23 42);
+    line-height: 1.5;
+}
+
+.field-empty {
+    color: rgb(148 163 184);
+    font-style: italic;
+}
+
+/* Stats Grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+@media (min-width: 768px) {
+    .stats-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.stat-card {
+    text-align: center;
+    padding: 1rem;
+    background: rgb(248 250 252);
+    border-radius: 0.5rem;
+}
+
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(15 23 42);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: rgb(71 85 105);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .profile-header {
+        padding: 1.5rem 1rem;
+    }
+
+    .profile-avatar {
+        width: 5rem;
+        height: 5rem;
+    }
+
+    .profile-avatar-initial {
+        font-size: 1.5rem;
+    }
+
+    .profile-details {
+        padding: 1rem;
+    }
+}
+
+/* Animations */
+.profile-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================= */
+/* ACTIVITY TABS STYLES (PHASE 3) */
+/* ============================= */
+
+/* Activity Tabs Navigation */
+.activity-tab {
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+
+.activity-tab:hover {
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+.activity-tab.active {
+    color: #2563eb !important;
+    border-bottom-color: #2563eb !important;
+    background-color: rgba(59, 130, 246, 0.05);
+}
+
+.activity-tab:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: -2px;
+}
+
+/* Privacy Toggle */
+.privacy-toggle {
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    padding: 0.125rem;
+    border-radius: 0.25rem;
+}
+
+.privacy-toggle:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: scale(1.1);
+}
+
+.privacy-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Activity Content */
+.activity-content {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.activity-content.hidden {
+    display: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Activity Items */
+.activity-item {
+    transition: all 0.2s ease-in-out;
+}
+
+.activity-item:hover {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    transform: translateY(-1px);
+}
+
+/* Load More Button */
+.load-more-btn {
+    transition: all 0.2s ease-in-out;
+}
+
+.load-more-btn:hover {
+    background-color: rgba(59, 130, 246, 0.05);
+    transform: translateY(-1px);
+}
+
+/* Status Indicators */
+.status-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+}
+
+.status-completed {
+    background-color: #10b981;
+}
+
+.status-in-progress {
+    background-color: #f59e0b;
+}
+
+.status-pending {
+    background-color: #6b7280;
+}
+
+/* Activity Tags */
+.activity-tag {
+    transition: all 0.2s ease-in-out;
+}
+
+.activity-tag:hover {
+    background-color: #dbeafe;
+    transform: scale(1.05);
+}
+
+/* Empty State */
+.empty-state {
+    animation: fadeInScale 0.5s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsive Activity Tabs */
+@media (max-width: 768px) {
+    .activity-tab {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .activity-tab span {
+        display: none;
+    }
+
+    .activity-tab::before {
+        content: attr(data-tab);
+        text-transform: capitalize;
+    }
+
+    .privacy-toggle {
+        margin-left: 0.25rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .activity-item {
+        padding: 0.75rem;
+    }
+
+    .activity-item .flex {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .activity-item img {
+        width: 100%;
+        height: 8rem;
+        margin-left: 0;
+    }
+}

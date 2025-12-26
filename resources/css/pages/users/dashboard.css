@@ -1,0 +1,33 @@
+/* Users Dashboard Styles */
+
+/* Table responsive */
+.overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Modal transitions */
+#create-event-modal {
+    transition: opacity 0.2s ease-out;
+}
+
+#create-event-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#create-event-modal:not(.hidden) {
+    opacity: 1;
+}
+
+/* Form inputs */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+}
+
+/* Sticky sidebar */
+@media (min-width: 1024px) {
+    aside .sticky {
+        max-height: calc(100vh - 8rem);
+        overflow-y: auto;
+    }
+}

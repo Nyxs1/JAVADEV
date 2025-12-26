@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+/* ============================= */
+/* BASE - Global Styles          */
+/* ============================= */
+@import "./base/reset.css";
+@import "./base/variables.css";
+@import "./base/global.css";
+@import "./base/animations.css";
+
+/* ============================= */
+/* LAYOUT - Shared Components    */
+/* ============================= */
+@import "./layout/navbar.css";
+@import "./layout/footer.css";
+
+/* ============================= */
+/* COMPONENTS                    */
+/* ============================= */
+@import "./components/navbar.css";
+@import "./components/toast.css";
+
+/* ============================= */
+/* PAGES - Page Specific Styles  */
+/* ============================= */
+
+/* Landing Page */
+@import "./pages/landing/layout.css";
+@import "./pages/landing/animations.css";
+@import "./pages/landing/hero.css";
+@import "./pages/landing/untuk-siapa.css";
+@import "./pages/landing/tools.css";
+@import "./pages/landing/courses.css";
+
+/* Auth Pages */
+@import "./pages/auth/login.css";
+@import "./pages/auth/register.css";
+
+/* Error Pages */
+@import "./pages/error.css";
+
+/* Profile Pages */
+@import "./pages/profile/profile.css";
+
+/* Onboarding Pages */
+@import "./pages/onboarding/onboarding.css";
+
+/* Events Pages */
+@import "./pages/events/index.css";
+@import "./pages/events/detail.css";
+@import "./pages/events/my-events.css";
+@import "./pages/events/requirements-edit.css";
+
+/* Users Dashboard */
+@import "./pages/users/dashboard.css";
+
+/* ============================= */
+/* TAILWIND SOURCES              */
+/* ============================= */
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+}

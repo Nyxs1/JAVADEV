@@ -1,0 +1,83 @@
+/* ============================= */
+/* NAVBAR COMPONENT STYLES       */
+/* ============================= */
+
+/* Avatar Dropdown */
+#avatar-dropdown {
+    position: relative;
+}
+
+#avatar-button {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#avatar-button:hover {
+    background-color: rgb(241 245 249); /* slate-100 */
+}
+
+/* Avatar Image */
+#avatar-dropdown .w-10 {
+    border: 2px solid rgb(226 232 240); /* slate-200 */
+}
+
+/* Dropdown Menu */
+#avatar-menu {
+    z-index: 50;
+    min-width: 12rem;
+    animation: fadeIn 0.15s ease-out;
+}
+
+#avatar-menu.hidden {
+    display: none;
+}
+
+#avatar-menu.show {
+    display: block;
+}
+
+/* Menu Items */
+#avatar-menu a,
+#avatar-menu button {
+    transition: background-color 0.15s ease;
+}
+
+#avatar-menu a:hover,
+#avatar-menu button:hover {
+    background-color: rgb(248 250 252); /* slate-50 */
+}
+
+#avatar-menu button[type="submit"]:hover {
+    background-color: rgb(254 242 242); /* red-50 */
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Nav Links */
+.nav-link {
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+    color: rgb(15 23 42); /* slate-900 */
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    #avatar-menu {
+        right: 0;
+        left: auto;
+        width: 200px;
+    }
+}

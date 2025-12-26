@@ -1,0 +1,28 @@
+/* =========================================
+   HERO SECTION
+   Khusus untuk hero section
+   ========================================= */
+
+#home {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #2b7fff;
+}
+
+/* Hero pattern container */
+#home .hero-pattern {
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+}
+
+#home .pattern-container {
+    transform: translateX(-600px);
+}
+
+#home .pattern-container .animate-pattern-sway {
+    transform-origin: center center;
+}

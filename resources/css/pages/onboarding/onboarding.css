@@ -1,0 +1,213 @@
+/* ============================= */
+/* ONBOARDING PAGE STYLES        */
+/* ============================= */
+
+/* Progress Indicator */
+.step-indicator {
+    transition: all 0.3s ease;
+}
+
+.step-indicator.active {
+    background-color: #2563eb;
+    color: white;
+}
+
+.step-label {
+    transition: all 0.3s ease;
+}
+
+.step-label.active {
+    color: #2563eb;
+    font-weight: 600;
+}
+
+.progress-line {
+    transition: all 0.3s ease;
+}
+
+.progress-line.active {
+    background-color: #2563eb;
+}
+
+/* Step Container */
+.onboarding-step {
+    transition: all 0.3s ease;
+}
+
+.onboarding-step.hidden {
+    display: none;
+}
+
+/* Focus Area Cards */
+.focus-area-card .focus-area-content {
+    transition: all 0.2s ease;
+}
+
+.focus-area-card .focus-area-input:checked + .focus-area-content {
+    border-color: #2563eb;
+    background-color: #eff6ff;
+}
+
+.focus-area-card:hover .focus-area-content {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Role Cards */
+.role-card .role-content {
+    transition: all 0.2s ease;
+}
+
+.role-card .role-input:checked + .role-content {
+    border-color: #2563eb;
+    background-color: #eff6ff;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.role-card:hover .role-content {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Form Elements */
+.onboarding-step input[type="text"],
+.onboarding-step input[type="email"],
+.onboarding-step input[type="date"],
+.onboarding-step textarea {
+    transition: all 0.2s ease;
+}
+
+.onboarding-step input:focus,
+.onboarding-step textarea:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+/* Middle Name Field Animation */
+#middle-name-field {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+#middle-name-field.hidden {
+    max-height: 0;
+    opacity: 0;
+    margin-top: 0;
+}
+
+#middle-name-field:not(.hidden) {
+    max-height: 100px;
+    opacity: 1;
+    margin-top: 0.5rem;
+}
+
+/* Age Display Animation */
+#age-display {
+    transition: all 0.3s ease;
+}
+
+#age-display.hidden {
+    opacity: 0;
+    max-height: 0;
+}
+
+#age-display:not(.hidden) {
+    opacity: 1;
+    max-height: 50px;
+}
+
+/* Button Animations */
+button {
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Info Box */
+.bg-blue-50 {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+.bg-amber-50 {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.onboarding-step.active {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .focus-area-card .focus-area-content {
+        padding: 0.75rem;
+    }
+
+    .role-card .role-content {
+        padding: 1rem;
+    }
+
+    .grid.grid-cols-2.md\\:grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid.grid-cols-1.md\\:grid-cols-2 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Loading State */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.loading button {
+    cursor: not-allowed;
+}
+
+/* Validation States */
+.border-red-500 {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
+}

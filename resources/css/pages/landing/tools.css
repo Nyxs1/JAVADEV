@@ -1,0 +1,202 @@
+/* =========================================
+   TOOLS SECTION
+   Khusus untuk tools section
+   ========================================= */
+
+#tools.tools-section {
+    padding: 72px 0;
+    background: #ffffff;
+}
+
+#tools .tools-wrap {
+    background: #2b2b2b;
+    border-radius: 32px;
+    padding: 72px 56px;
+    box-shadow: 0 30px 100px rgba(0, 0, 0, 0.35);
+}
+
+#tools .tools-header {
+    text-align: center;
+    margin-bottom: 72px;
+}
+
+#tools .tools-title {
+    font-size: 48px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 18px;
+    letter-spacing: -0.02em;
+}
+
+#tools .tools-desc {
+    font-size: 16px;
+    line-height: 1.9;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+#tools .tools-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding-top: 16px;
+}
+
+/* ============================= */
+/* ELEGANT BADGE ANIMATIONS      */
+/* ============================= */
+
+#tools .tool-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    height: 72px;
+    padding: 0 22px;
+    background: #ffffff;
+    border-radius: 14px;
+    width: fit-content;
+    white-space: nowrap;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+    position: relative;
+    overflow: hidden;
+
+    /* SYNC WITH CARD ANIMATION - SAME DIRECTION AS BLACK CARD */
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ANIMATED STATE - SAME AS BLACK CARD */
+#tools .tool-item.animate-in {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) !important;
+}
+
+/* EXIT STATE - SAME AS BLACK CARD */
+#tools .tool-item.animate-out {
+    opacity: 0 !important;
+    transform: translate3d(0, 25px, 0) !important;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Force show when section is visible (fallback) */
+#tools.section-visible .tool-item {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) !important;
+}
+
+/* HOVER EFFECT */
+#tools .tool-item.animate-in:hover {
+    transform: translate3d(0, -8px, 0) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+/* ELEGANT STAGGERED DELAYS */
+#tools .tool-item:nth-child(1) {
+    transition-delay: 0ms;
+}
+#tools .tool-item:nth-child(2) {
+    transition-delay: 100ms;
+}
+#tools .tool-item:nth-child(3) {
+    transition-delay: 200ms;
+}
+#tools .tool-item:nth-child(4) {
+    transition-delay: 300ms;
+}
+#tools .tool-item:nth-child(5) {
+    transition-delay: 400ms;
+}
+#tools .tool-item:nth-child(6) {
+    transition-delay: 500ms;
+}
+#tools .tool-item:nth-child(7) {
+    transition-delay: 600ms;
+}
+#tools .tool-item:nth-child(8) {
+    transition-delay: 700ms;
+}
+#tools .tool-item:nth-child(9) {
+    transition-delay: 800ms;
+}
+#tools .tool-item:nth-child(10) {
+    transition-delay: 900ms;
+}
+#tools .tool-item:nth-child(11) {
+    transition-delay: 1000ms;
+}
+#tools .tool-item:nth-child(12) {
+    transition-delay: 1100ms;
+}
+
+/* SUBTLE SHIMMER EFFECT */
+#tools .tool-item::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: left 0.6s ease;
+}
+
+#tools .tool-item.animate-in:hover::before {
+    left: 100%;
+}
+
+/* ============================= */
+/* BADGE CONTENT STYLING         */
+/* ============================= */
+
+#tools .tool-item img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+#tools .tool-item span {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+    line-height: 1;
+}
+
+/* ============================= */
+/* RESPONSIVE DESIGN             */
+/* ============================= */
+
+@media (max-width: 768px) {
+    #tools .tools-header {
+        margin-bottom: 56px;
+    }
+
+    #tools .tools-title {
+        font-size: 36px;
+    }
+
+    #tools .tool-item {
+        height: 64px;
+        padding: 0 18px;
+    }
+
+    #tools .tool-item span {
+        font-size: 14px;
+    }
+
+    #tools .tool-item img {
+        width: 24px;
+        height: 24px;
+    }
+}

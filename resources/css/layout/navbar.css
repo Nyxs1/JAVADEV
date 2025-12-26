@@ -1,0 +1,128 @@
+/* Navbar active link style */
+.nav-active {
+    color: #111827;
+    font-weight: 600;
+    border-bottom: 2px solid #1d4ed8;
+}
+
+/* Avatar Dropdown Container */
+#avatar-dropdown {
+    position: relative;
+}
+
+/* Avatar circle - default state */
+#avatar-circle {
+    transition: box-shadow 200ms ease;
+}
+
+/* Avatar circle - active/open state highlight */
+.avatar-trigger[aria-expanded="true"] #avatar-circle {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Dropdown Menu Wrapper - ORIGINAL right-aligned position */
+.avatar-dropdown-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    z-index: 50;
+    overflow: visible;
+
+    /* Hidden by default */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 180ms ease-out, transform 180ms ease-out,
+        visibility 180ms;
+}
+
+/* Open state */
+.avatar-dropdown-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Dropdown Content Box - Clean rounded card */
+.avatar-dropdown-content {
+    position: relative;
+    width: 180px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.12),
+        0 2px 6px -2px rgba(0, 0, 0, 0.08);
+    padding: 6px 0;
+    overflow: visible;
+}
+
+/*
+ * Caret triangle - position set dynamically via --caret-x CSS variable
+ * JS calculates avatar center relative to dropdown and sets the variable
+ */
+
+/* Triangle shadow layer (behind) */
+.avatar-dropdown-content::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: var(--caret-x, 50%);
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid rgba(0, 0, 0, 0.1);
+    z-index: -1;
+}
+
+/* Triangle fill layer (front) */
+.avatar-dropdown-content::after {
+    content: "";
+    position: absolute;
+    top: -7px;
+    left: var(--caret-x, 50%);
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #ffffff;
+    z-index: 1;
+}
+
+/* Menu items */
+.avatar-dropdown-content a,
+.avatar-dropdown-content button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #475569;
+    transition: background-color 150ms ease;
+}
+
+.avatar-dropdown-content a:hover,
+.avatar-dropdown-content button:hover {
+    background-color: #f8fafc;
+}
+
+.avatar-dropdown-content a img,
+.avatar-dropdown-content button img {
+    opacity: 0.6;
+}
+
+.avatar-dropdown-content hr {
+    margin: 4px 0;
+    border-color: #f1f5f9;
+}
+
+/* Logout button specific */
+.avatar-dropdown-content button[type="submit"] {
+    width: 100%;
+    color: #dc2626;
+}
+
+.avatar-dropdown-content button[type="submit"]:hover {
+    background-color: #fef2f2;
+}

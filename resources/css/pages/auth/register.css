@@ -1,0 +1,1429 @@
+/* =========================================
+   REGISTER PAGE STYLES
+   Khusus untuk halaman register
+   ========================================= */
+
+/* =========================
+   REGISTER BODY & LAYOUT
+   ========================= */
+.register-body {
+    margin: 0;
+    padding: 0;
+    font-family: inherit;
+}
+
+.register-container {
+    display: flex;
+    min-height: 100vh;
+    background: #eef6ff;
+    background-image: radial-gradient(
+        circle,
+        rgba(59, 130, 246, 0.2) 2px,
+        transparent 2px
+    );
+    background-size: 30px 30px;
+    animation: dotSlide 8s ease-in-out infinite;
+    padding: 40px;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+}
+
+@keyframes dotSlide {
+    0%,
+    100% {
+        background-position: 0px 0px;
+    }
+    50% {
+        background-position: 30px 30px;
+    }
+}
+
+.register-card {
+    display: flex;
+    flex-direction: row;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    max-width: 1100px;
+    width: 100%;
+    min-height: 650px;
+}
+
+/* =========================
+   REGISTER FORM SIDE (LEFT)
+   ========================= */
+.register-form-side {
+    flex: 1;
+    padding: 56px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: white;
+}
+
+/* =========================
+   REGISTER HEADER
+   ========================= */
+.register-header {
+    margin-bottom: 36px;
+}
+
+.register-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.register-logo-img {
+    max-width: 160px;
+    max-height: 80px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    display: block;
+}
+
+.register-title {
+    font-size: 32px;
+    font-weight: 800;
+    text-align: center;
+    background: linear-gradient(135deg, #1e40af, #3b82f6, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.register-subtitle {
+    text-align: center;
+    color: #6b7280;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 0;
+    line-height: 1.5;
+}
+
+/* =========================
+   REGISTER FORM
+   ========================= */
+.register-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.register-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.register-row {
+    display: flex;
+    gap: 16px;
+}
+
+.register-field-half {
+    flex: 1;
+}
+
+.register-label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 14px;
+}
+
+/* =========================
+   REGISTER INPUT FIELDS
+   ========================= */
+.register-input {
+    border: 1.5px solid #d1d5db;
+    border-radius: 12px;
+    height: 48px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    transition: border-color 0.2s ease;
+    background: #f8fafc;
+}
+
+.register-input:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background: #fff;
+}
+
+.register-input.has-value {
+    border-color: #2563eb;
+}
+
+.register-input.has-value .register-input-icon svg path {
+    fill: #2563eb;
+}
+
+.register-input.has-value .register-input-icon svg path[stroke] {
+    stroke: #2563eb;
+    fill: none;
+}
+
+.register-input:focus-within .register-input-icon svg path {
+    fill: #2563eb;
+}
+
+.register-input:focus-within .register-input-icon svg path[stroke] {
+    stroke: #2563eb;
+    fill: none;
+}
+
+/* Support for img icons with filter - BLUE when focused */
+.register-input:focus-within .register-input-icon img {
+    filter: brightness(0) saturate(100%) invert(36%) sepia(93%) saturate(1815%)
+        hue-rotate(212deg) brightness(97%) contrast(91%);
+}
+
+.register-input.has-value .register-input-icon img {
+    filter: brightness(0) saturate(100%) invert(36%) sepia(93%) saturate(1815%)
+        hue-rotate(212deg) brightness(97%) contrast(91%);
+}
+
+/* Error state */
+.register-input.error {
+    border-color: #ef4444;
+}
+
+/* Error state icon - SOFT RED */
+.register-input.error .register-input-icon img {
+    filter: brightness(0) saturate(100%) invert(44%) sepia(89%) saturate(1827%)
+        hue-rotate(338deg) brightness(98%) contrast(92%);
+}
+
+.register-input.error .register-input-icon svg path {
+    fill: #ef4444;
+}
+
+.register-input.error .register-input-icon svg path[stroke] {
+    stroke: #ef4444;
+}
+
+.register-input.error:focus-within {
+    border-color: #ef4444;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Success state */
+.register-input.success {
+    border-color: #10b981;
+    background: #f0fdf4;
+}
+
+.register-input.success:focus-within {
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+    background: #fff;
+}
+
+.register-input.success .register-input-icon svg path {
+    fill: #10b981;
+}
+
+.register-input.success .register-input-icon svg path[stroke] {
+    stroke: #10b981;
+    fill: none;
+}
+
+.register-input-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.register-input input {
+    border: 0;
+    outline: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    font-size: 14px;
+}
+
+/* Disable auto-focus */
+.register-input input:focus {
+    outline: none;
+}
+
+input:-webkit-autofill:focus {
+    outline: none;
+}
+
+/* Autofill */
+.register-input input:-webkit-autofill,
+.register-input input:-webkit-autofill:hover,
+.register-input input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px #f8fafc inset;
+    -webkit-text-fill-color: #000;
+}
+
+/* =========================
+   REGISTER GET CODE BUTTON (WHITE FILLED)
+   ========================= */
+.btn-get-code {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: #246cf9;
+
+    background: #ffffff;
+    border: 1.5px solid #e5e7eb;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.06);
+
+    cursor: pointer;
+    flex-shrink: 0;
+    padding: 8px 14px;
+    border-radius: 6px; /* less rounded */
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    font-size: 13px;
+}
+
+.btn-get-code__text {
+    display: inline-block;
+    line-height: 1;
+}
+
+.btn-get-code__icon {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+}
+
+.btn-get-code:hover {
+    background: #f8fafc;
+    border-color: #dbeafe;
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.1);
+    transform: translateY(-1px);
+}
+
+.btn-get-code:disabled {
+    color: #9ca3af;
+    border-color: #e5e7eb;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+}
+
+.btn-get-code:disabled .btn-get-code__icon {
+    filter: brightness(0) saturate(100%) invert(71%) sepia(8%) saturate(293%)
+        hue-rotate(182deg) brightness(92%) contrast(87%);
+    opacity: 0.5;
+}
+/* =========================
+   VERIFICATION (MATCH REGISTER STYLE)
+   ========================= */
+.verification-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.verification-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: all 0.2s ease;
+}
+
+.verification-input:focus-within {
+    border-color: #2563eb;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.verification-input-icon img {
+    width: 18px;
+    height: 18px;
+    opacity: 0.6;
+}
+
+.verification-input input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 14px;
+    color: #0f172a;
+}
+
+.verification-help {
+    margin-top: 8px;
+    font-size: 12px;
+    color: #64748b;
+}
+.verification-help.success {
+    color: #16a34a;
+}
+.verification-help.error {
+    color: #dc2626;
+}
+
+/* =========================
+   REGISTER DANGER ZONE (OTP Warning)
+   ========================= */
+.register-danger-zone {
+    display: flex;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #fffbeb;
+    border: 1px solid #fcd34d;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+.register-danger-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+}
+
+.register-danger-icon img {
+    width: 100%;
+    height: 100%;
+}
+
+.register-danger-content {
+    flex: 1;
+}
+
+.register-danger-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #92400e;
+    margin: 0 0 4px 0;
+}
+
+.register-danger-list {
+    margin: 0;
+    padding: 0 0 0 16px;
+    font-size: 12px;
+    color: #a16207;
+    line-height: 1.5;
+}
+
+.register-danger-list li {
+    margin-bottom: 2px;
+}
+
+.register-danger-list li:last-child {
+    margin-bottom: 0;
+}
+
+/* =========================
+   REGISTER PASSWORD TOGGLE
+   ========================= */
+.register-input-toggle {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+/* Default state - GRAY (sama dengan icon lain) */
+.register-input-toggle img {
+    filter: brightness(0) saturate(100%) invert(71%) sepia(8%) saturate(293%)
+        hue-rotate(182deg) brightness(92%) contrast(87%);
+    opacity: 0.5;
+}
+
+/* Default state untuk semua icon input */
+.register-input-icon img {
+    filter: brightness(0) saturate(100%) invert(71%) sepia(8%) saturate(293%)
+        hue-rotate(182deg) brightness(92%) contrast(87%);
+    opacity: 0.7;
+}
+
+.register-input-toggle:hover img {
+    opacity: 0.9;
+}
+
+/* Focus/Has-value state - BLUE */
+.register-input:focus-within .register-input-toggle img,
+.register-input.has-value .register-input-toggle img {
+    filter: brightness(0) saturate(100%) invert(36%) sepia(93%) saturate(1815%)
+        hue-rotate(212deg) brightness(97%) contrast(91%);
+    opacity: 1;
+}
+
+/* Error state - SOFT RED */
+.register-input.error .register-input-toggle img {
+    filter: brightness(0) saturate(100%) invert(44%) sepia(89%) saturate(1827%)
+        hue-rotate(338deg) brightness(98%) contrast(92%);
+    opacity: 1;
+}
+
+/* Active (password visible) - BLUE */
+.register-input-toggle.active img {
+    filter: brightness(0) saturate(100%) invert(36%) sepia(93%) saturate(1815%)
+        hue-rotate(212deg) brightness(97%) contrast(91%);
+    opacity: 1;
+}
+
+/* Eye icon animation - smooth transition */
+.register-input-toggle img {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.register-input-toggle:active img {
+    transform: scale(0.9);
+}
+
+.register-input-toggle.active img {
+    transform: scale(1.1);
+    animation: eyeBlink 0.3s ease-out;
+}
+
+@keyframes eyeBlink {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(0.8);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+}
+
+/* =========================
+   REGISTER BUTTON
+   ========================= */
+.register-btn {
+    height: 56px;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 8px;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    letter-spacing: 0.5px;
+}
+
+.register-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 50%, #3b82f6 100%);
+}
+
+.register-btn:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.register-btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.register-btn.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-top: -10px;
+    margin-left: -10px;
+}
+
+/* =========================
+   REGISTER ERROR & SUCCESS
+   ========================= */
+.register-error {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 6px;
+    animation: slideDown 0.2s ease-out;
+}
+
+.register-error-global {
+    text-align: center;
+    padding: 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+}
+
+.verification-success {
+    color: #10b981;
+    font-size: 13px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    animation: slideDown 0.2s ease-out;
+}
+
+.verification-success::before {
+    content: "✓";
+    font-weight: bold;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   VERIFICATION FIELD ANIMATION
+   ========================= */
+.verification-help {
+    font-size: 12px;
+    margin-top: 6px;
+    color: #6b7280;
+    margin-bottom: 0;
+}
+
+.verification-help.error {
+    color: #ef4444;
+}
+
+.verification-help.success {
+    color: #10b981;
+}
+
+.auth-label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.auth-input {
+    border: 1.5px solid #d1d5db;
+    border-radius: 12px;
+    height: 48px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    transition: border-color 0.2s ease;
+    background: #f8fafc;
+}
+
+.auth-input:focus-within {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    background: #fff;
+}
+
+.auth-input__icon {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) saturate(100%) invert(71%) sepia(8%) saturate(293%)
+        hue-rotate(182deg) brightness(92%) contrast(87%);
+    opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.auth-input:focus-within .auth-input__icon {
+    filter: brightness(0) saturate(100%) invert(36%) sepia(93%) saturate(1815%)
+        hue-rotate(212deg) brightness(97%) contrast(91%);
+    opacity: 1;
+}
+
+.auth-input input {
+    border: 0;
+    outline: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    font-size: 14px;
+}
+
+.auth-help {
+    font-size: 12px;
+    margin-top: 6px;
+    color: #6b7280;
+    margin-bottom: 0;
+}
+
+.auth-help.error {
+    color: #ef4444;
+}
+
+.auth-help.success {
+    color: #10b981;
+}
+
+#verificationField {
+    animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+        max-height: 100px;
+    }
+}
+
+/* =========================
+   REGISTER PASSWORD STRENGTH
+   ========================= */
+.password-strength {
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.password-strength__track {
+    flex: 1;
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.password-strength__bar {
+    height: 100%;
+    width: 0;
+    border-radius: 2px;
+    transition: width 0.3s ease, background 0.3s ease;
+}
+
+.password-strength__text {
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 40px;
+}
+
+/* Strength levels */
+.password-strength--weak .password-strength__bar {
+    background: #ef4444;
+}
+.password-strength--weak .password-strength__text {
+    color: #ef4444;
+}
+
+.password-strength--medium .password-strength__bar {
+    background: #f59e0b;
+}
+.password-strength--medium .password-strength__text {
+    color: #f59e0b;
+}
+
+.password-strength--strong .password-strength__bar {
+    background: #10b981;
+}
+.password-strength--strong .password-strength__text {
+    color: #10b981;
+}
+
+/* Password hint */
+.password-hint {
+    font-size: 11px;
+    color: #9ca3af;
+    margin-top: 4px;
+}
+
+/* =========================
+   REGISTER BOTTOM LINK
+   ========================= */
+.register-bottom {
+    text-align: center;
+    margin-top: 16px;
+    font-size: 14px;
+    color: #64748b;
+}
+
+.register-link {
+    color: #2563eb;
+    font-weight: 700;
+    text-decoration: none;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+    color: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+.register-link::after {
+    content: "";
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    transition: width 0.3s ease;
+}
+
+.register-link:hover::after {
+    width: 100%;
+}
+
+/* =========================
+   REGISTER ILLUSTRATION SIDE (RIGHT)
+   ========================= */
+.register-illustration-side {
+    flex: 1;
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 50%, #1d4ed8 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 56px 48px;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-illustration-side::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.12) 2px,
+            transparent 2px
+        ),
+        radial-gradient(circle, rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.1) 1.5px,
+            transparent 1.5px
+        );
+    background-size: 40px 40px, 25px 25px, 60px 60px;
+    background-position: 0 0, 20px 20px, 30px 30px;
+    background-repeat: repeat;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.register-illustration {
+    text-align: center;
+    color: #fff;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    z-index: 2;
+}
+
+/* =========================
+   REGISTER FLOATING ICONS
+   ========================= */
+.register-floating-icons {
+    position: absolute;
+    top: 60px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200px;
+    height: 200px;
+    z-index: 10;
+    pointer-events: none;
+}
+
+.register-icon {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* TERMINAL (Main Glass Background) */
+.register-icon-terminal {
+    width: 180px;
+    height: 180px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 28px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-6deg);
+    z-index: 1;
+}
+
+/* TROPHY (Yellow Card) */
+.register-icon-trophy {
+    width: 80px;
+    height: 80px;
+    background: #fcd34d;
+    top: -20px;
+    right: -30px;
+    transform: rotate(12deg);
+    z-index: 2;
+    color: #451a03;
+}
+
+/* CODE (White Card) */
+.register-icon-code {
+    width: 72px;
+    height: 72px;
+    background: #ffffff;
+    bottom: -20px;
+    left: -20px;
+    transform: rotate(-15deg);
+    z-index: 3;
+}
+
+/* =========================
+   REGISTER ILLUSTRATION TEXT
+   ========================= */
+.register-illustration-title {
+    margin-top: 200px;
+    font-size: 34px;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    position: relative;
+    z-index: 4;
+}
+
+.register-illustration-text {
+    font-size: 15px;
+    opacity: 0.88;
+    line-height: 1.55;
+    max-width: 360px;
+    margin: 0 auto 26px;
+    position: relative;
+    z-index: 4;
+}
+
+/* =========================
+   REGISTER FEATURES
+   ========================= */
+.register-features {
+    display: flex;
+    gap: 22px;
+    justify-content: center;
+    margin-top: 30px;
+    position: relative;
+    z-index: 4;
+}
+
+.register-feature {
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 22px 18px;
+    width: 170px;
+    min-height: 120px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 18px 54px rgba(0, 0, 0, 0.18);
+}
+
+.register-feature-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+.register-feature h3 {
+    font-size: 16px;
+    font-weight: 800;
+    margin: 0 0 4px;
+}
+
+.register-feature p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.82;
+}
+
+/* =========================
+   SOCIAL NOTIFICATION STYLES
+   ========================= */
+
+.social-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    animation: slideInRight 0.3s ease-out;
+}
+
+.social-notification-content {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    max-width: 320px;
+    min-width: 280px;
+}
+
+.social-notification-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.social-notification-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #374151;
+}
+
+.social-notification-text strong {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.social-notification-close {
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.social-notification-close:hover {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* =========================
+   OTP NOTIFICATION (GEN Z STYLE)
+   ========================= */
+.otp-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 380px;
+    min-width: 320px;
+}
+
+.otp-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.otp-notification-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.otp-notification-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.otp-notification-icon-img {
+    width: 24px;
+    height: 24px;
+    filter: brightness(0) invert(1);
+}
+
+.otp-notification-title {
+    flex: 1;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.otp-notification-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.otp-notification-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.otp-notification-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.otp-code-display {
+    background: rgba(255, 255, 255, 0.95);
+    color: #2563eb;
+    font-size: 32px;
+    font-weight: 900;
+    font-family: "Courier New", monospace;
+    letter-spacing: 4px;
+    padding: 16px 24px;
+    border-radius: 12px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 2px dashed #3b82f6;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+    }
+    100% {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.otp-notification-text {
+    color: white;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.otp-notification-text strong {
+    color: #fbbf24;
+    font-weight: 600;
+}
+
+.otp-copy-btn {
+    background: rgba(255, 255, 255, 0.9);
+    color: #2563eb;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.otp-copy-btn:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================
+   ERROR NOTIFICATION (WARNING STYLE)
+   ========================= */
+.error-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-width: 380px;
+    min-width: 320px;
+}
+
+.error-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.error-notification-content {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.error-notification-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 20px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.error-notification-icon {
+    font-size: 24px;
+    animation: shake 2s infinite;
+}
+
+@keyframes shake {
+    0%,
+    50%,
+    100% {
+        transform: translateX(0);
+    }
+    10%,
+    30% {
+        transform: translateX(-5px);
+    }
+    20%,
+    40% {
+        transform: translateX(5px);
+    }
+}
+
+.error-notification-title {
+    flex: 1;
+    font-weight: 700;
+    font-size: 16px;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.error-notification-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.error-notification-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.error-notification-body {
+    padding: 20px;
+    text-align: center;
+}
+
+.error-notification-text {
+    color: white;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.error-login-btn {
+    background: rgba(255, 255, 255, 0.9);
+    color: #dc2626;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.error-login-btn:hover {
+    background: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* =========================
+   REGISTER RESPONSIVE
+   ========================= */
+@media (max-width: 480px) {
+    .register-container {
+        padding: 20px;
+    }
+
+    .register-card {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .register-illustration-side {
+        min-height: 340px;
+        order: -1;
+    }
+
+    .register-form-side {
+        padding: 32px 24px;
+    }
+
+    .register-row {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .register-features {
+        flex-direction: column;
+        gap: 16px;
+    }
+}
+
+/* =========================
+   DEV OTP PANEL (LEFT SIDE, INLINE)
+   ========================= */
+.dev-otp-panel {
+    margin-top: 12px;
+    animation: slideDown 0.3s ease-out;
+}
+
+.dev-otp-panel.hidden {
+    display: none;
+}
+
+.dev-otp-panel__content {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 10px;
+    padding: 14px 16px;
+}
+
+.dev-otp-panel__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.dev-otp-panel__icon {
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+}
+
+.dev-otp-panel__title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0369a1;
+}
+
+.dev-otp-panel__code {
+    font-family: "Courier New", monospace;
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #0c4a6e;
+    background: #ffffff;
+    border: 2px dashed #7dd3fc;
+    border-radius: 8px;
+    padding: 10px 16px;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.dev-otp-panel__hint {
+    font-size: 12px;
+    color: #64748b;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.dev-otp-panel__copy {
+    display: block;
+    width: 100%;
+    background: #0ea5e9;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.dev-otp-panel__copy:hover {
+    background: #0284c7;
+}
+
+.dev-otp-panel__copy:active {
+    transform: scale(0.98);
+}

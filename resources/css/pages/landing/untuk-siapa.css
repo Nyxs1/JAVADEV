@@ -1,0 +1,182 @@
+/* =========================================
+   UNTUK SIAPA SECTION
+   Khusus untuk section "Untuk Siapa"
+   ========================================= */
+
+/* ============================= */
+/* SECTION LAYOUT                */
+/* ============================= */
+
+#target {
+    padding: 80px 0;
+    background: #ffffff;
+}
+
+/* ============================= */
+/* CARDS GRID                    */
+/* ============================= */
+
+#target .grid {
+    display: grid;
+    gap: 32px;
+}
+
+@media (min-width: 768px) {
+    #target .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ============================= */
+/* CARD CONTAINER                */
+/* ============================= */
+
+#target .card-hover-container {
+    position: relative;
+    perspective: 1000px;
+    transform-style: preserve-3d;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background: #ffffff;
+    cursor: pointer;
+}
+
+/* ============================= */
+/* CARD INNER                    */
+/* ============================= */
+
+#target .card-inner {
+    position: relative;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: translate3d(0, 0, 0);
+    overflow: hidden;
+    border-radius: 0.5rem;
+}
+
+#target .card-hover-container:hover .card-inner {
+    transform: translate3d(0, -8px, 15px) rotateX(1deg);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12),
+        0 8px 20px rgba(59, 130, 246, 0.08);
+}
+
+/* ============================= */
+/* CARD IMAGE                    */
+/* ============================= */
+
+#target .card-image {
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    transform: scale(1);
+    display: block;
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+#target .card-hover-container:hover .card-image {
+    transform: scale(1.02);
+}
+
+/* ============================= */
+/* BADGE - CENTERED & SAME WIDTH */
+/* ============================= */
+
+/* STRONGEST selector possible */
+section#target .card-inner .card-badge,
+section#target .card-hover-container .card-inner .card-badge {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    padding: 12px 24px !important;
+    min-width: 160px !important;
+    background: #ffffff !important;
+    border-radius: 9999px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #2563eb !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12) !important;
+    z-index: 10 !important;
+    transition: transform 0.3s ease !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+}
+
+section#target .card-hover-container:hover .card-badge {
+    transform: translate(-50%, -50%) scale(1.05) !important;
+}
+
+/* ============================= */
+/* BADGE INNER                   */
+/* ============================= */
+
+#target .badge-inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#target .badge-inner img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
+
+#target .badge-inner span {
+    font-weight: 600;
+    color: #2563eb;
+}
+
+/* ============================= */
+/* GLOW EFFECT ON HOVER          */
+/* ============================= */
+
+#target .card-hover-container:hover .card-inner::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 0.5rem;
+    background: radial-gradient(
+        circle at center,
+        rgba(59, 130, 246, 0.1) 0%,
+        transparent 70%
+    );
+    pointer-events: none;
+}
+
+/* ============================= */
+/* MOBILE RESPONSIVE             */
+/* ============================= */
+
+@media (max-width: 768px) {
+    #target {
+        padding: 60px 0;
+    }
+
+    #target .card-image {
+        height: 240px;
+    }
+
+    #target .card-badge {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    #target .badge-inner img {
+        width: 28px;
+        height: 28px;
+    }
+
+    #target .card-hover-container:hover .card-inner {
+        transform: translate3d(0, -8px, 10px);
+    }
+}
