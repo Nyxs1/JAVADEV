@@ -15,6 +15,10 @@ import "./components/profile/public-tabs";
 import "./components/profile/dual-crop";
 import "./components/banner-editor";
 
+// Feature modules
+import "./modules/avatar-editor";
+import "./modules/username-checker";
+
 // Page modules - Auth
 import "./pages/auth/login";
 import "./pages/auth/register";

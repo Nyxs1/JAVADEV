@@ -458,8 +458,9 @@ class OnboardingManager {
         };
 
         /**
-         * Generate cropped avatar from the circle area.
-         * Uses CENTER-BASED coordinates to correctly extract the visible circle.
+         * Generate cropped avatar from FULL VISIBLE FRAME (banner).
+         * The navbar avatar is extracted from CENTER of this banner on display.
+         * Output: 768x256 (3:1 aspect ratio)
          */
         const generateCroppedAvatar = () => {
             const canvas = document.getElementById("avatar-canvas");
@@ -471,7 +472,14 @@ class OnboardingManager {
             }
 
             const ctx = canvas.getContext("2d");
-            const OUTPUT_SIZE = 256; // Output canvas size
+            
+            // Output size for banner (3:1 aspect)
+            const OUTPUT_W = 768;
+            const OUTPUT_H = 256;
+            
+            // Set canvas size
+            canvas.width = OUTPUT_W;
+            canvas.height = OUTPUT_H;
 
             // Get frame size (responsive)
             const { frameW, frameH } = getFrameSize();
@@ -495,24 +503,24 @@ class OnboardingManager {
             const imgLeft = imgCenterX - scaledW / 2;
             const imgTop = imgCenterY - scaledH / 2;
 
-            // Circle area to crop (center of frame)
-            const circleLeft = frameCenterX - CIRCLE_RADIUS;
-            const circleTop = frameCenterY - CIRCLE_RADIUS;
+            // FULL FRAME area to crop (the entire visible frame, not just circle)
+            const frameLeft = 0;
+            const frameTop = 0;
 
             // Calculate source rectangle in original image coordinates
-            const srcX = (circleLeft - imgLeft) / finalScale;
-            const srcY = (circleTop - imgTop) / finalScale;
-            const srcW = CIRCLE_DIAMETER / finalScale;
-            const srcH = CIRCLE_DIAMETER / finalScale;
+            const srcX = (frameLeft - imgLeft) / finalScale;
+            const srcY = (frameTop - imgTop) / finalScale;
+            const srcW = frameW / finalScale;
+            const srcH = frameH / finalScale;
 
             // Clear and draw
-            ctx.clearRect(0, 0, OUTPUT_SIZE, OUTPUT_SIZE);
+            ctx.clearRect(0, 0, OUTPUT_W, OUTPUT_H);
 
             try {
                 ctx.drawImage(
                     img,
                     srcX, srcY, srcW, srcH,
-                    0, 0, OUTPUT_SIZE, OUTPUT_SIZE
+                    0, 0, OUTPUT_W, OUTPUT_H
                 );
 
                 const dataURL = canvas.toDataURL("image/jpeg", 0.9);
