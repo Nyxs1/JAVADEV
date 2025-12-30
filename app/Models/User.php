@@ -309,4 +309,36 @@ class User extends Authenticatable
 
         return "object-position: {$posX}% {$posY}%; transform: scale({$zoom}); transform-origin: {$posX}% {$posY}%;";
     }
+
+    /**
+     * User's portfolio items.
+     */
+    public function portfolios()
+    {
+        return $this->hasMany(Portfolio::class)->latest();
+    }
+
+    /**
+     * User's published portfolios.
+     */
+    public function publishedPortfolios()
+    {
+        return $this->portfolios()->published();
+    }
+
+    /**
+     * User's course enrollments.
+     */
+    public function userCourses()
+    {
+        return $this->hasMany(UserCourse::class)->latest();
+    }
+
+    /**
+     * User's published courses.
+     */
+    public function publishedCourses()
+    {
+        return $this->userCourses()->published();
+    }
 }
