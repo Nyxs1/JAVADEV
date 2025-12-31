@@ -38,11 +38,21 @@ class ProfileController extends Controller
         $user = User::with(['role', 'skills'])->where('username', $username)->firstOrFail();
         $isOwnProfile = Auth::check() && Auth::id() === $user->id;
 
+        // Load published items for public profile
+        // For own profile, show all items; for others, only published
+        $portfolios = $isOwnProfile
+            ? $user->portfolios()->get()
+            : $user->publishedPortfolios()->get();
+
+        $courses = $isOwnProfile
+            ? $user->userCourses()->get()
+            : $user->publishedCourses()->get();
+
         return view('pages.profile.index', [
             'user' => $user,
             'isOwnProfile' => $isOwnProfile,
-            'portfolioActivities' => [],
-            'courseActivities' => [],
+            'portfolioActivities' => $portfolios,
+            'courseActivities' => $courses,
             'eventSummary' => $this->getEventSummary($user),
             'certificates' => $this->getCertificates($user),
             'discussionSummary' => $this->getDiscussionSummary($user),
@@ -187,26 +197,6 @@ class ProfileController extends Controller
     // =========================================================================
     // PRIVACY & VISIBILITY
     // =========================================================================
-
-    public function updatePrivacy(Request $request)
-    {
-        $user = Auth::user();
-
-        $validated = $request->validate([
-            'activity_type' => 'required|string|in:events,mentoring,portfolio,course,discussion,challenge',
-            'is_public' => 'required|boolean',
-        ]);
-
-        $user->setActivityPrivacy($validated['activity_type'], $validated['is_public']);
-
-        $tabName = ucfirst($validated['activity_type']);
-        $status = $validated['is_public'] ? 'public' : 'private';
-
-        return $this->jsonSuccess("{$tabName} is now {$status}.", [
-            'activity_type' => $validated['activity_type'],
-            'is_public' => $validated['is_public'],
-        ]);
-    }
 
     public function updateVisibility(Request $request)
     {

@@ -40,7 +40,10 @@ class DashboardService
             'events' => $this->events->load($user, $ctx->filter),
             'mentor' => $this->mentor->load($user, $ctx),
             'admin' => $this->admin->load($ctx, request()),
-            'portfolio' => ['portfolioItems' => collect()],
+            'portfolio' => [
+                'portfolios' => $user->portfolios()->with(['evidences', 'builtFromCourse', 'screenshots'])->get(),
+                'userCourses' => $user->userCourses()->get(),
+            ],
             'courses' => ['enrolledCourses' => collect()],
             'discussions' => ['userDiscussions' => collect()],
             default => $this->overview->load($user, $flags['isMentor'] ?? false),

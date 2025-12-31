@@ -127,6 +127,39 @@ Route::middleware('auth')->name('users.')->group(function () {
 });
 
 /* ============================= */
+/* DASHBOARD - PORTFOLIO         */
+/* ============================= */
+use App\Http\Controllers\Dashboard\PortfolioController;
+use App\Http\Controllers\Dashboard\PortfolioScreenshotController;
+use App\Http\Controllers\Dashboard\UserCourseController;
+use App\Http\Controllers\Dashboard\ItemEvidenceController;
+
+Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
+    // Portfolio CRUD
+    Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
+    Route::post('/portfolio', [PortfolioController::class, 'store'])->name('portfolio.store');
+    Route::post('/portfolio/upsert', [PortfolioController::class, 'upsert'])->name('portfolio.upsert');
+    Route::put('/portfolio/{portfolio}', [PortfolioController::class, 'update'])->name('portfolio.update');
+    Route::delete('/portfolio/{portfolio}', [PortfolioController::class, 'destroy'])->name('portfolio.destroy');
+    Route::post('/portfolio/{portfolio}/publish', [PortfolioController::class, 'publish'])->name('portfolio.publish');
+    Route::post('/portfolio/{portfolio}/unpublish', [PortfolioController::class, 'unpublish'])->name('portfolio.unpublish');
+
+    // Portfolio Screenshots
+    Route::delete('/portfolio-screenshots/{screenshot}', [PortfolioScreenshotController::class, 'destroy'])->name('portfolio.screenshots.destroy');
+
+    // Courses Management
+    Route::get('/courses', [UserCourseController::class, 'index'])->name('courses.index');
+    Route::post('/courses', [UserCourseController::class, 'storeDemoEnrollment'])->name('courses.store');
+    Route::post('/courses/{userCourse}/publish', [UserCourseController::class, 'publish'])->name('courses.publish');
+    Route::post('/courses/{userCourse}/unpublish', [UserCourseController::class, 'unpublish'])->name('courses.unpublish');
+
+    // Evidence Management
+    Route::post('/evidence', [ItemEvidenceController::class, 'store'])->name('evidence.store');
+    Route::delete('/evidence/{evidence}', [ItemEvidenceController::class, 'destroy'])->name('evidence.destroy');
+});
+
+
+/* ============================= */
 /* PROFILE ROUTES                */
 /* ============================= */
 Route::middleware('auth')->group(function () {
@@ -147,7 +180,6 @@ Route::middleware('auth')->group(function () {
     // Profile actions
     Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::post('/profile/role-request', [App\Http\Controllers\ProfileController::class, 'requestRoleChange'])->name('profile.role-request');
-    Route::post('/profile/privacy', [App\Http\Controllers\ProfileController::class, 'updatePrivacy'])->name('profile.privacy');
     Route::post('/profile/visibility', [App\Http\Controllers\ProfileController::class, 'updateVisibility'])->name('profile.visibility');
     Route::post('/profile/change-password', [App\Http\Controllers\ProfileController::class, 'changePassword'])->name('profile.change-password');
     Route::post('/profile/avatar-focus', [App\Http\Controllers\ProfileController::class, 'updateAvatarFocus'])->name('profile.avatar-focus');
