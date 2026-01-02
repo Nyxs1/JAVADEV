@@ -28,7 +28,7 @@
     ];
 @endphp
 
-<div class="portfolio-card p-4 border border-slate-200 rounded-xl hover:border-slate-300 transition-all bg-white"
+<div class="portfolio-card p-4 border border-slate-200 rounded-xl hover:border-slate-300 transition-all bg-white hover:shadow-md"
     data-portfolio-id="{{ $portfolio->id }}" data-portfolio-json='@json($wizardData)'>
 
     {{-- Cover Image --}}
@@ -119,9 +119,9 @@
         </span>
         <div class="flex items-center gap-2">
             {{-- Edit Button --}}
-            <button type="button"
-                onclick="openPortfolioWizard(JSON.parse(this.closest('.portfolio-card').dataset.portfolioJson))"
-                class="p-1.5 text-slate-400 hover:text-blue-600 transition-colors" title="Edit Portfolio">
+            <button type="button" data-edit-portfolio data-portfolio-json='@json($wizardData)'
+                class="p-1.5 text-slate-400 hover:text-blue-600 transition-all duration-150 hover:scale-110"
+                title="Edit Portfolio">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -129,8 +129,10 @@
             </button>
 
             {{-- Add Evidence Button --}}
-            <button type="button" onclick="openEvidenceModal('portfolio', {{ $portfolio->id }})"
-                class="p-1.5 text-slate-400 hover:text-blue-600 transition-colors" title="Tambah Evidence">
+            <button type="button" data-open-evidence-modal data-item-type="portfolio"
+                data-item-id="{{ $portfolio->id }}"
+                class="p-1.5 text-slate-400 hover:text-blue-600 transition-all duration-150 hover:scale-110"
+                title="Tambah Evidence">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -138,11 +140,11 @@
             </button>
 
             {{-- Delete Button --}}
-            <form method="POST" action="{{ route('dashboard.portfolio.destroy', $portfolio) }}"
-                onsubmit="return confirm('Yakin hapus portfolio ini?')">
+            <form method="POST" action="{{ route('dashboard.portfolio.destroy', $portfolio) }}" data-confirm-delete>
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="p-1.5 text-slate-400 hover:text-red-600 transition-colors">
+                <button type="submit"
+                    class="p-1.5 text-slate-400 hover:text-red-600 transition-all duration-150 hover:scale-110">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -156,7 +158,7 @@
                     class="portfolio-publish-form">
                     @csrf
                     <button type="submit"
-                        class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+                        class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98]">
                         Unpublish
                     </button>
                 </form>
@@ -165,7 +167,7 @@
                     class="portfolio-publish-form">
                     @csrf
                     <button type="submit"
-                        class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                        class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98] shadow-sm">
                         Publish
                     </button>
                 </form>

@@ -16,6 +16,8 @@
     'fallbackInitial' => '?',
     'showEditor' => false,
     'hasImage' => false,
+    'style' => null,
+    'user' => null,
 ])
 
 {{-- 
@@ -58,21 +60,22 @@
         {{-- 3. CENTER CIRCLE OVERLAY - Shows navbar avatar extraction area (EDITOR ONLY) --}}
         <div id="avatar-circle-mask" class="absolute inset-0 pointer-events-none {{ $hasImage ? '' : 'hidden' }}">
             {{-- Translucent gray overlay with transparent circle at CENTER --}}
+            {{-- Circle radius 115 = large, nearly full height (banner height 256, max radius ~128) --}}
             <svg class="w-full h-full" viewBox="0 0 768 256" preserveAspectRatio="xMidYMid slice">
                 <defs>
                     <mask id="center-circle-mask-{{ uniqid() }}">
                         <rect width="100%" height="100%" fill="white"/>
-                        <circle cx="384" cy="128" r="80" fill="black"/>
+                        <circle cx="384" cy="128" r="115" fill="black"/>
                     </mask>
                 </defs>
                 <rect width="100%" height="100%" fill="rgba(0,0,0,0.35)" mask="url(#center-circle-mask-{{ uniqid() }})"/>
             </svg>
             
-            {{-- Dashed circle border --}}
-            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full border-2 border-white/80 border-dashed shadow-lg"></div>
+            {{-- Dashed circle border (92% of container height = big circle) --}}
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 aspect-square h-[92%] rounded-full border-2 border-white/80 border-dashed shadow-lg"></div>
             
             {{-- Label --}}
-            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-16 bg-black/70 text-white text-[10px] px-2.5 py-1 rounded-full whitespace-nowrap backdrop-blur-sm">
+            <div class="absolute left-1/2 bottom-1 -translate-x-1/2 bg-black/70 text-white text-[10px] px-2.5 py-1 rounded-full whitespace-nowrap backdrop-blur-sm">
                 Avatar Area
             </div>
         </div>
@@ -109,9 +112,36 @@
             <span>Drag to pan • Scroll to zoom</span>
         </div>
     @else
-        {{-- VIEW MODE (No circle overlay, just the image) --}}
+        {{-- VIEW MODE: Render image with proper pan/zoom from avatar_focus --}}
         @if($src)
-            <img src="{{ $src }}" alt="{{ $alt }}" class="absolute inset-0 w-full h-full object-cover">
+            @php
+                // Parse zoom and pan from the avatar_style string
+                // avatar_style format: "object-position: X% Y%; transform: scale(Z); transform-origin: center;"
+                $zoom = 1;
+                $posX = 50;
+                $posY = 50;
+                
+                if ($style) {
+                    if (preg_match('/object-position:\s*([\d.]+)%\s*([\d.]+)%/', $style, $posMatches)) {
+                        $posX = floatval($posMatches[1]);
+                        $posY = floatval($posMatches[2]);
+                    }
+                    if (preg_match('/scale\(([\d.]+)\)/', $style, $scaleMatch)) {
+                        $zoom = floatval($scaleMatch[1]);
+                    }
+                }
+            @endphp
+            {{-- Simple approach: object-position handles pan, scale handles zoom --}}
+            {{-- Use a wrapper with overflow:hidden to clip zoomed content --}}
+            @php
+                $isCurrentUser = $user && auth()->check() && auth()->id() === $user->id;
+            @endphp
+            <div class="absolute inset-0 overflow-hidden">
+                <img src="{{ $src }}" alt="{{ $alt }}" 
+                    class="absolute inset-0 w-full h-full object-cover"
+                    style="object-position: {{ $posX }}% {{ $posY }}%;{{ $zoom != 1 ? ' transform: scale(' . $zoom . '); transform-origin: ' . $posX . '% ' . $posY . '%;' : '' }}"
+                    @if($isCurrentUser) data-avatar-img="user-{{ $user->id }}" data-avatar-shape="banner" @endif>
+            </div>
         @else
             <div class="absolute inset-0 flex items-center justify-center w-full h-full bg-gradient-to-br from-blue-500 to-indigo-600">
                 <span class="text-6xl font-bold text-white/60">{{ strtoupper($fallbackInitial) }}</span>

@@ -293,22 +293,56 @@ class User extends Authenticatable
      */
     public function getAvatarFocusWithDefaults(): array
     {
-        $default = ['x' => 0.5, 'y' => 0.5, 'zoom' => 1.0];
-        return array_merge($default, $this->avatar_focus ?? []);
+        $default = [
+            'zoom' => 1.0,
+            'panX' => 0,
+            'panY' => 0,
+            // 'frame' indicates the coordinate space used when the focus was captured.
+            // - 'circle': 1:1 editor (Profile Settings)
+            // - 'banner': 3:1 editor with circle overlay (Onboarding)
+            'frame' => 'circle',
+        ];
+
+        $focus = $this->avatar_focus ?? [];
+
+        // Backward compatible: older focus format used x/y (0..1) center-based.
+        // Convert to panX/panY roughly (normalized around 0).
+        if (isset($focus['x']) || isset($focus['y'])) {
+            // x/y are 0..1 where 0.5 is center.
+            $focus['panX'] = (float) (($focus['x'] ?? 0.5) - 0.5) * -2; // invert so positive pan moves image right
+            $focus['panY'] = (float) (($focus['y'] ?? 0.5) - 0.5) * -2;
+        }
+
+        // Backward compatible:
+        // If frontend stores panXNorm/panYNorm, prefer it as normalized (-1..1).
+        if (isset($focus['panXNorm']) || isset($focus['panYNorm'])) {
+            $focus['panX'] = $focus['panXNorm'] ?? 0;
+            $focus['panY'] = $focus['panYNorm'] ?? 0;
+        }
+
+        // If focus keys missing, fill defaults
+        return array_merge($default, $focus);
     }
 
-    /**
-     * Get CSS style string for avatar display.
-     */
     public function getAvatarStyleAttribute(): string
     {
         $focus = $this->getAvatarFocusWithDefaults();
-        $posX = ($focus['x'] ?? 0.5) * 100;
-        $posY = ($focus['y'] ?? 0.5) * 100;
-        $zoom = $focus['zoom'] ?? 1.0;
+
+        $zoom = (float) ($focus['zoom'] ?? 1.0);
+        $panX = (float) ($focus['panX'] ?? 0);
+        $panY = (float) ($focus['panY'] ?? 0);
+
+        // panX/panY MUST be normalized (-1..1-ish)
+        $posX = 50 - ($panX * 50);
+        $posY = 50 - ($panY * 50);
+
+        $posX = max(0, min(100, $posX));
+        $posY = max(0, min(100, $posY));
 
         return "object-position: {$posX}% {$posY}%; transform: scale({$zoom}); transform-origin: {$posX}% {$posY}%;";
     }
+
+
 
     /**
      * User's portfolio items.

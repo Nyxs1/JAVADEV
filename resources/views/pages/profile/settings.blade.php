@@ -168,42 +168,45 @@
                     </div>
 
                     <div class="p-6">
-                        <div class="mb-4">
-                            <label for="username" class="block text-sm font-medium text-slate-700 mb-1">
-                                Username
-                            </label>
-                            <div class="flex gap-2">
-                                <div class="relative flex-1">
-                                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">@</span>
-                                    <input type="text" name="username" id="username-input"
-                                        value="{{ $user->username }}" data-original="{{ $user->username }}"
-                                        class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                        minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]+">
+                        <form id="account-form" method="POST" action="{{ route('settings.username.update') }}">
+                            @csrf
+                            <div class="mb-4">
+                                <label for="username" class="block text-sm font-medium text-slate-700 mb-1">
+                                    Username
+                                </label>
+                                <div class="flex gap-2">
+                                    <div class="relative flex-1">
+                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">@</span>
+                                        <input type="text" name="username" id="username"
+                                            value="{{ $user->username }}" data-original="{{ $user->username }}"
+                                            class="w-full pl-8 pr-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                            minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]+" required>
+                                    </div>
+                                    <button type="button" id="check-username-btn"
+                                        class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg border border-slate-300 hover:bg-slate-200 transition-colors whitespace-nowrap">
+                                        Check
+                                    </button>
                                 </div>
-                                <button type="button" id="btn-check-username"
-                                    class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg border border-slate-300 hover:bg-slate-200 transition-colors whitespace-nowrap">
-                                    Check
+
+                                {{-- Status Message --}}
+                                <div id="username-status" class="mt-2 hidden">
+                                    <div class="flex items-center gap-2">
+                                        <img id="username-status-icon" src="" class="w-4 h-4 hidden" alt="">
+                                        <span id="username-status-text" class="text-sm"></span>
+                                    </div>
+                                </div>
+
+                                <p class="text-xs text-slate-500 mt-2">Letters, numbers, and underscores only. 3-20 characters.</p>
+                            </div>
+
+                            {{-- Save Button --}}
+                            <div class="flex justify-end">
+                                <button type="submit" id="save-username-btn" disabled
+                                    class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                    Save Username
                                 </button>
                             </div>
-
-                            {{-- Status Message --}}
-                            <div id="username-check-status" class="mt-2 hidden">
-                                <div class="flex items-center gap-2">
-                                    <span id="username-status-icon"></span>
-                                    <span id="username-status-text" class="text-sm"></span>
-                                </div>
-                            </div>
-
-                            <p class="text-xs text-slate-500 mt-2">Letters, numbers, and underscores only. 3-20 characters.</p>
-                        </div>
-
-                        {{-- Save Button --}}
-                        <div class="flex justify-end">
-                            <button type="button" id="btn-save-username" disabled
-                                class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                                Save Username
-                            </button>
-                        </div>
+                        </form>
                     </div>
                 </div>
 

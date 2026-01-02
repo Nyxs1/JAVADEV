@@ -93,7 +93,7 @@
 
             {{-- Scroll Indicator --}}
             <div class="text-center">
-                <button id="scroll-down-btn" onclick="scrollToNextSection()"
+                <button id="scroll-down-btn" data-scroll-to-next
                     class="inline-flex flex-col items-center group cursor-pointer hover:scale-110 transition-transform duration-300">
                     <div class="relative">
                         <svg class="w-28 h-28 animate-spin-slow" viewBox="0 0 140 140">

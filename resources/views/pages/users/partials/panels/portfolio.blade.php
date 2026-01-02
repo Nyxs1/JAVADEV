@@ -11,8 +11,8 @@
                 <p class="text-slate-600 mt-1">Manage your projects and showcase your work</p>
             </div>
             @if($isOwner)
-                <button type="button" onclick="openPortfolioWizard()"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium">
+                <button type="button" data-open-portfolio-wizard
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium transition-all duration-150 hover:scale-[1.02] active:scale-[0.98]">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
@@ -57,13 +57,13 @@
 {{-- Evidence Modal --}}
 @if($isOwner)
     <div id="evidence-modal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/50" onclick="closeEvidenceModal()"></div>
+        <div class="absolute inset-0 bg-black/50" data-close-evidence-overlay></div>
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
                 <div class="p-6 border-b border-slate-200 flex items-center justify-between">
                     <h2 class="text-lg font-semibold text-slate-900">Tambah Evidence</h2>
-                    <button type="button" onclick="closeEvidenceModal()"
-                        class="p-2 text-slate-400 hover:text-slate-600 rounded-lg">
+                    <button type="button" data-close-evidence-modal
+                        class="p-2 text-slate-400 hover:text-slate-600 rounded-lg transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M6 18L18 6M6 6l12 12" />
@@ -77,7 +77,8 @@
                     <input type="hidden" name="item_id" id="evidence-item-id">
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Type</label>
-                        <select name="type" required class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+                        <select name="type" required
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                             <option value="github">GitHub</option>
                             <option value="link">Link</option>
                             <option value="demo">Demo</option>
@@ -87,20 +88,21 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">Label (optional)</label>
                         <input type="text" name="label" maxlength="100"
-                            class="w-full px-3 py-2 border border-slate-300 rounded-lg" placeholder="e.g., Main Repository">
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            placeholder="e.g., Main Repository">
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-700 mb-1">URL <span
                                 class="text-red-500">*</span></label>
                         <input type="url" name="value" required maxlength="500"
-                            class="w-full px-3 py-2 border border-slate-300 rounded-lg"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             placeholder="https://github.com/...">
                     </div>
                     <div class="flex justify-end gap-3 pt-4 border-t border-slate-200">
-                        <button type="button" onclick="closeEvidenceModal()"
-                            class="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg">Cancel</button>
+                        <button type="button" data-close-evidence-modal
+                            class="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">Cancel</button>
                         <button type="submit"
-                            class="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">Tambah</button>
+                            class="px-6 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">Tambah</button>
                     </div>
                 </form>
             </div>
@@ -109,21 +111,8 @@
 
     {{-- Portfolio Wizard Modal --}}
     <x-dashboard.portfolio-wizard-modal :userCourses="$userCourses ?? collect()" />
-
-    <script>
-        function openEvidenceModal(itemType, itemId) {
-            document.getElementById('evidence-item-type').value = itemType;
-            document.getElementById('evidence-item-id').value = itemId;
-            document.getElementById('evidence-modal').classList.remove('hidden');
-        }
-
-        function closeEvidenceModal() {
-            document.getElementById('evidence-modal').classList.add('hidden');
-            document.getElementById('evidence-form').reset();
-        }
-
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') closeEvidenceModal();
-        });
-    </script>
 @endif
+
+@push('scripts')
+    @vite('resources/js/pages/dashboard/portfolio.js')
+@endpush

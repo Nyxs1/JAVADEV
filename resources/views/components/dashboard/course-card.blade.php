@@ -8,7 +8,7 @@
     $evidences = $course->evidences ?? collect();
 @endphp
 
-<div class="course-card p-4 border border-slate-200 rounded-xl hover:border-slate-300 transition-all bg-white"
+<div class="course-card p-4 border border-slate-200 rounded-xl hover:border-slate-300 transition-all bg-white hover:shadow-md"
     data-course-id="{{ $course->id }}" data-status="{{ $course->status }}">
 
     <div class="flex items-start gap-4">
@@ -95,8 +95,10 @@
                 </span>
                 <div class="flex items-center gap-2">
                     {{-- Add Evidence Button --}}
-                    <button type="button" onclick="openEvidenceModal('user_course', {{ $course->id }})"
-                        class="p-1.5 text-slate-400 hover:text-blue-600 transition-colors" title="Tambah Evidence">
+                    <button type="button" data-open-evidence-modal data-item-type="user_course"
+                        data-item-id="{{ $course->id }}"
+                        class="p-1.5 text-slate-400 hover:text-blue-600 transition-all duration-150 hover:scale-110"
+                        title="Tambah Evidence">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
@@ -109,15 +111,15 @@
                             class="course-publish-form">
                             @csrf
                             <button type="submit"
-                                class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors">
+                                class="px-3 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98]">
                                 Unpublish
                             </button>
                         </form>
                     @else
                         @if($isInProgress)
                             {{-- Show warning modal for in-progress courses --}}
-                            <button type="button" onclick="showPublishWarningModal({{ $course->id }})"
-                                class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                            <button type="button" data-show-publish-warning data-course-id="{{ $course->id }}"
+                                class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98] shadow-sm">
                                 Publish
                             </button>
                         @else
@@ -125,7 +127,7 @@
                                 class="course-publish-form">
                                 @csrf
                                 <button type="submit"
-                                    class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                                    class="px-3 py-1.5 text-xs font-medium rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98] shadow-sm">
                                     Publish
                                 </button>
                             </form>
@@ -138,8 +140,8 @@
 
     {{-- Publish Warning Modal (hidden by default) --}}
     @if($isInProgress && !$isPublished)
-        <div id="publish-warning-modal-{{ $course->id }}" class="fixed inset-0 z-50 hidden">
-            <div class="absolute inset-0 bg-black/50" onclick="hidePublishWarningModal({{ $course->id }})"></div>
+        <div id="publish-warning-{{ $course->id }}" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black/50" data-hide-publish-warning data-course-id="{{ $course->id }}"></div>
             <div class="absolute inset-0 flex items-center justify-center p-4">
                 <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
                     <div class="p-6">
@@ -157,7 +159,7 @@
                             Lanjutkan?
                         </p>
                         <div class="flex justify-end gap-3">
-                            <button type="button" onclick="hidePublishWarningModal({{ $course->id }})"
+                            <button type="button" data-hide-publish-warning data-course-id="{{ $course->id }}"
                                 class="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
                                 Cancel
                             </button>

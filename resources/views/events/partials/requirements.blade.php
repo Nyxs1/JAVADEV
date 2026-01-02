@@ -43,7 +43,7 @@
                         <div class="event-requirements__tags">
                             @foreach($techRequirements[$category] as $item)
                             @php
-                                $iconUrl = \App\Support\TechIconResolver::url($item->title, $item->icon ?? null, $category);
+                                $iconUrl = \App\Services\Shared\TechIconResolver::url($item->title, $item->icon ?? null, $category);
                             @endphp
                             <span class="event-requirements__tag">
                                 <span class="event-requirements__tag-icon">

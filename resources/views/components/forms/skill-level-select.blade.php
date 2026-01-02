@@ -5,7 +5,7 @@
 ])
 
 @php
-    use App\Enums\SkillLevel;
+    use App\Http\Support\Enums\SkillLevel;
 @endphp
 
 <select 
