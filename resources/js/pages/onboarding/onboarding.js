@@ -46,7 +46,13 @@ class OnboardingManager {
 
         // Form submit handler for loading state
         if (this.form && this.submitBtn) {
+            console.log("[ONBOARDING] Attaching form submit handler...");
             this.form.addEventListener("submit", (e) => this.handleSubmit(e));
+        } else {
+            console.error("[ONBOARDING] FAILED to attach submit handler!", {
+                form: !!this.form,
+                submitBtn: !!this.submitBtn
+            });
         }
 
         // Middle name toggle
@@ -78,43 +84,99 @@ class OnboardingManager {
         this.initRoleSelectUI();
     }
 
-    handleSubmit(e) {
-        // Validate before submit
+
+    async handleSubmit(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Validate
         if (!this.validateCurrentStep()) {
-            e.preventDefault();
             return;
         }
 
-        // Generate cropped avatar before submit
+        console.log("[ONBOARDING] handleSubmit triggered!");
+
+        // Generate cropped avatar FIRST
         this.generateCroppedAvatar();
 
-        // Populate avatar focus data (normalized pan/zoom for display)
-        if (typeof this._getAvatarFocusData === 'function') {
-            const focusData = this._getAvatarFocusData();
-            const zoomInput = document.getElementById('avatar_zoom_input');
-            const panXInput = document.getElementById('avatar_pan_x_input');
-            const panYInput = document.getElementById('avatar_pan_y_input');
-            
-            if (zoomInput) zoomInput.value = focusData.zoom || 1;
-            if (panXInput) panXInput.value = focusData.panXNorm || 0;
-            if (panYInput) panYInput.value = focusData.panYNorm || 0;
-        }
+        // Verify crop was generated
+        const croppedInput = document.getElementById("cropped_avatar");
+        const cropLength = croppedInput?.value?.length || 0;
+        console.log("[ONBOARDING] Cropped data length:", cropLength);
 
         // Show loading state
         if (this.submitBtn) {
             this.submitBtn.disabled = true;
             const textEl = this.submitBtn.querySelector(".submit-text");
             const loadingEl = this.submitBtn.querySelector(".submit-loading");
-
             if (textEl) textEl.classList.add("hidden");
             if (loadingEl) loadingEl.classList.remove("hidden");
+        }
+
+        try {
+            // Create FormData from form
+            const formData = new FormData(this.form);
+
+            // Debug: Log what we're sending
+            console.log("[ONBOARDING] FormData contents:");
+            for (const [key, value] of formData.entries()) {
+                if (key === "cropped_avatar") {
+                    console.log(`  ${key}: [base64, length=${value.length}]`);
+                } else if (value instanceof File) {
+                    console.log(`  ${key}: [File: ${value.name}, size=${value.size}]`);
+                } else {
+                    console.log(`  ${key}: ${String(value).substring(0, 50)}`);
+                }
+            }
+
+            // Submit via AJAX fetch (like profile.js)
+            const response = await fetch(this.form.action, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                },
+            });
+
+            const data = await response.json();
+            console.log("[ONBOARDING] Server response:", data);
+
+            if (data.success) {
+                // Redirect
+                window.location.href = data.redirect_url || "/profile";
+            } else {
+                this.showError(data.message || "Failed to save onboarding data.");
+                this.resetSubmitButton();
+            }
+        } catch (error) {
+            console.error("[ONBOARDING] Submit error:", error);
+            this.showError("Network error. Please try again.");
+            this.resetSubmitButton();
+        }
+    }
+
+    resetSubmitButton() {
+        if (this.submitBtn) {
+            this.submitBtn.disabled = false;
+            const textEl = this.submitBtn.querySelector(".submit-text");
+            const loadingEl = this.submitBtn.querySelector(".submit-loading");
+
+            if (textEl) textEl.classList.remove("hidden");
+            if (loadingEl) loadingEl.classList.add("hidden");
         }
     }
 
     generateCroppedAvatar() {
-        // This calls the real implementation stored during initProfilePicture
+        console.log("[ONBOARDING] generateCroppedAvatar called");
+
+        // Call the closure implementation if available (it has access to
+        // baseCoverScale, userZoom, panX, panY variables directly)
         if (typeof this._generateCroppedAvatarImpl === 'function') {
+            console.log("[ONBOARDING] Using closure implementation");
             this._generateCroppedAvatarImpl();
+        } else {
+            console.error("[ONBOARDING] _generateCroppedAvatarImpl not available!");
         }
     }
 
@@ -363,26 +425,36 @@ class OnboardingManager {
         const CIRCLE_DIAMETER = CIRCLE_RADIUS * 2; // 160px
         const DRAG_THRESHOLD = 5; // Minimum px movement to start drag
 
+        // State
+        let lastFrameW = 768; // Default fallback
+        let lastFrameH = 256;
+
         /**
-         * Get REAL frame size from DOM (responsive)
+         * Get REAL frame size from DOM (responsive), with caching
          */
         const getFrameSize = () => {
             const rect = dropzone.getBoundingClientRect();
-            return { frameW: rect.width, frameH: rect.height };
+            if (rect.width > 0 && rect.height > 0) {
+                lastFrameW = rect.width;
+                lastFrameH = rect.height;
+                return { frameW: rect.width, frameH: rect.height };
+            }
+            // Return cached values if hidden
+            return { frameW: lastFrameW, frameH: lastFrameH };
         };
 
         // State
         let hasImage = false;
         let isEditing = false; // Edit mode flag - blocks upload when true
-        
+
         // Scale state - CENTER-BASED positioning
         let baseCoverScale = 1; // Computed once per image to make it cover the frame
         let userZoom = 1; // User-controlled zoom (1.0 = default)
-        
+
         // Pan state - CENTER-BASED (0,0 = centered)
         let panX = 0;
         let panY = 0;
-        
+
         let isDragging = false;
         let dragStartX = 0;
         let dragStartY = 0;
@@ -405,6 +477,32 @@ class OnboardingManager {
          * CENTER-BASED transform positioning
          * panX=0, panY=0 means IMAGE IS CENTERED
          */
+        /**
+         * Update hidden inputs with current normalized values
+         * Called immediately after interaction to ensure data is ready before step switching
+         */
+        const updateHiddenInputs = () => {
+            const { frameW, frameH } = getFrameSize();
+            if (frameW === 0 || frameH === 0) return; // Guard against hidden state
+
+            const zoomInput = document.getElementById("avatar_zoom_input");
+            const panXInput = document.getElementById("avatar_pan_x_input");
+            const panYInput = document.getElementById("avatar_pan_y_input");
+            const frameWInput = document.getElementById("avatar_frame_w_input");
+            const frameHInput = document.getElementById("avatar_frame_h_input");
+            const circleDInput = document.getElementById("avatar_circle_d_input");
+
+            // Save userZoom only - view mode uses object-fit:cover for base coverage
+            if (zoomInput) zoomInput.value = userZoom;
+            if (panXInput) panXInput.value = panX / frameW;
+            if (panYInput) panYInput.value = panY / frameH;
+
+            // Persist frame metadata so server can map banner-focus -> navbar circle correctly
+            if (frameWInput) frameWInput.value = frameW;
+            if (frameHInput) frameHInput.value = frameH;
+            if (circleDInput) circleDInput.value = CIRCLE_DIAMETER;
+        };
+
         const updateImageTransform = (animate = false) => {
             if (!img || !imgNaturalW || !imgNaturalH || !baseCoverScale) return;
 
@@ -455,90 +553,91 @@ class OnboardingManager {
             panX = 0;
             panY = 0;
             updateImageTransform(animate);
+            updateHiddenInputs();
         };
 
         /**
-         * Generate cropped avatar from FULL VISIBLE FRAME (banner).
-         * The navbar avatar is extracted from CENTER of this banner on display.
-         * Output: 768x256 (3:1 aspect ratio)
+         * Generate cropped avatar - BANNER VERSION
+         * Extracts the ENTIRE visible area from the frame as a 768x256 banner.
+         * The circle display (navbar) will naturally use the center of this banner.
          */
         const generateCroppedAvatar = () => {
+            console.log("=== [CROP] generateCroppedAvatar START ===");
+
             const canvas = document.getElementById("avatar-canvas");
             const croppedInput = document.getElementById("cropped_avatar");
 
-            if (!canvas || !croppedInput || !img || !img.src || img.src === "") {
-                if (croppedInput) croppedInput.value = "";
+            if (!canvas || !croppedInput || !img || !img.src || imgNaturalW === 0) {
+                console.error("[CROP] Missing elements or image not loaded");
                 return;
             }
 
             const ctx = canvas.getContext("2d");
-            
-            // Output size for banner (3:1 aspect)
+
+            // Output dimensions for the BANNER (Matches the 3:1 aspect ratio of the editor)
             const OUTPUT_W = 768;
             const OUTPUT_H = 256;
-            
-            // Set canvas size
+
             canvas.width = OUTPUT_W;
             canvas.height = OUTPUT_H;
 
-            // Get frame size (responsive)
+            // Get current frame dimensions
             const { frameW, frameH } = getFrameSize();
 
-            // Final scale = baseCoverScale * userZoom
-            const finalScale = baseCoverScale * userZoom;
+            // Map factor from frame coordinates to output coordinates
+            // Since the editor is 3:1, scale should be identical for W and H
+            const cropScale = OUTPUT_W / frameW;
 
-            // Scaled image dimensions
+            // Image dimensions at current zoom
+            const finalScale = baseCoverScale * userZoom;
             const scaledW = imgNaturalW * finalScale;
             const scaledH = imgNaturalH * finalScale;
 
-            // Frame center
+            // Image position relative to frame top-left
             const frameCenterX = frameW / 2;
             const frameCenterY = frameH / 2;
+            const imgLeft = frameCenterX + panX - scaledW / 2;
+            const imgTop = frameCenterY + panY - scaledH / 2;
 
-            // Image center in frame coordinates (with pan offset)
-            const imgCenterX = frameCenterX + panX;
-            const imgCenterY = frameCenterY + panY;
+            // Map to output canvas
+            const drawX = imgLeft * cropScale;
+            const drawY = imgTop * cropScale;
+            const drawW = scaledW * cropScale;
+            const drawH = scaledH * cropScale;
 
-            // Image top-left corner in frame coordinates
-            const imgLeft = imgCenterX - scaledW / 2;
-            const imgTop = imgCenterY - scaledH / 2;
+            console.log("[CROP] Draw params (Banner):", {
+                frameW, frameH, cropScale,
+                drawX, drawY, drawW, drawH
+            });
 
-            // FULL FRAME area to crop (the entire visible frame, not just circle)
-            const frameLeft = 0;
-            const frameTop = 0;
+            // Fill background
+            ctx.fillStyle = "#e2e8f0";
+            ctx.fillRect(0, 0, OUTPUT_W, OUTPUT_H);
 
-            // Calculate source rectangle in original image coordinates
-            const srcX = (frameLeft - imgLeft) / finalScale;
-            const srcY = (frameTop - imgTop) / finalScale;
-            const srcW = frameW / finalScale;
-            const srcH = frameH / finalScale;
-
-            // Clear and draw
-            ctx.clearRect(0, 0, OUTPUT_W, OUTPUT_H);
-
+            // Draw image
             try {
-                ctx.drawImage(
-                    img,
-                    srcX, srcY, srcW, srcH,
-                    0, 0, OUTPUT_W, OUTPUT_H
-                );
-
-                const dataURL = canvas.toDataURL("image/jpeg", 0.9);
+                ctx.drawImage(img, drawX, drawY, drawW, drawH);
+                const dataURL = canvas.toDataURL("image/jpeg", 0.92);
                 croppedInput.value = dataURL;
-            } catch (err) {
-                console.error("Failed to generate cropped avatar:", err);
+                console.log("[CROP] SUCCESS - Banner crop length:", dataURL.length);
+            } catch (e) {
+                console.error("[CROP] Error generating crop:", e);
                 croppedInput.value = "";
             }
+
+            console.log("=== [CROP] generateCroppedAvatar END ===");
         };
 
         // Store reference on class instance for handleSubmit to access
         this._generateCroppedAvatarImpl = generateCroppedAvatar;
 
         // Return normalized pan/zoom for avatar_focus storage
+        // Uses getFrameSize which now handles hidden state via cache
+        // NOTE: Save only userZoom because view mode uses object-fit:cover for base coverage
         const getAvatarFocusData = () => {
             const { frameW, frameH } = getFrameSize();
             return {
-                zoom: userZoom,
+                zoom: userZoom, // Just user zoom, view mode handles base coverage with object-fit:cover
                 panXNorm: frameW > 0 ? panX / frameW : 0,
                 panYNorm: frameH > 0 ? panY / frameH : 0,
             };
@@ -649,8 +748,10 @@ class OnboardingManager {
                 requestAnimationFrame(() => {
                     img.style.transition = "opacity 0.3s ease";
                     img.style.opacity = "1";
-                    // Generate initial cropped avatar after load
-                    generateCroppedAvatar();
+                    // Generate initial cropped avatar and hidden inputs after load
+                    // This ensures form is ready for submission even without pan/zoom interaction
+                    if (typeof generateCroppedAvatar === 'function') generateCroppedAvatar();
+                    if (typeof updateHiddenInputs === 'function') updateHiddenInputs();
                 });
             };
 
@@ -678,6 +779,7 @@ class OnboardingManager {
             // Clear cropped avatar when image is removed
             const croppedInput = document.getElementById("cropped_avatar");
             if (croppedInput) croppedInput.value = "";
+            updateHiddenInputs();
             hideImageUI();
             hideError();
         };
@@ -697,6 +799,7 @@ class OnboardingManager {
         // === CHANGE PHOTO BUTTON (explicit upload trigger) ===
         changeBtn?.addEventListener("click", (e) => {
             e.stopPropagation();
+            input.value = ""; // Reset to allow re-selecting same file
             input.click();
         });
 
@@ -789,7 +892,7 @@ class OnboardingManager {
                 isDragging = true;
                 dropzone.style.cursor = "grabbing";
                 editOverlay?.classList.remove("opacity-0");
-                guide?.classList.remove("hidden");
+                editOverlay?.classList.remove("opacity-0");
             }
 
             panX = clientX - dragStartX;
@@ -804,13 +907,14 @@ class OnboardingManager {
 
             dropzone.style.cursor = hasImage ? "grab" : "pointer";
             editOverlay?.classList.add("opacity-0");
-            guide?.classList.add("hidden");
+            editOverlay?.classList.add("opacity-0");
 
             if (wasDragging) {
                 // Smooth snap to bounds
                 updateImageTransform(true);
                 // Update cropped avatar after pan
                 generateCroppedAvatar();
+                updateHiddenInputs();
             }
         };
 
@@ -871,6 +975,7 @@ class OnboardingManager {
             updateImageTransform(false);
             // Update cropped avatar after zoom
             generateCroppedAvatar();
+            updateHiddenInputs();
         });
 
         // === RESET BUTTON ===
@@ -883,6 +988,7 @@ class OnboardingManager {
             updateImageTransform(true);
             // Update cropped avatar after reset
             generateCroppedAvatar();
+            updateHiddenInputs();
         });
 
         // === DELETE BUTTON ===

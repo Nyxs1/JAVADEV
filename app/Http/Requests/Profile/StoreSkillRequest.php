@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests\Profile;
 
-use App\Enums\SkillLevel;
+use App\Http\Support\Enums\SkillLevel;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSkillRequest extends FormRequest

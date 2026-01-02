@@ -3,10 +3,10 @@
 namespace App\Services\Profile;
 
 use App\Models\User;
-use App\Actions\Profile\UpdateProfile;
-use App\Actions\Profile\UploadAvatar;
-use App\Actions\Profile\DeleteAvatar;
-use App\Actions\Profile\ChangePassword;
+use App\Services\Profile\Actions\UpdateProfile;
+use App\Services\Profile\Actions\UploadAvatar;
+use App\Services\Profile\Actions\DeleteAvatar;
+use App\Services\Profile\Actions\ChangePassword;
 
 class ProfileService
 {
@@ -71,6 +71,8 @@ class ProfileService
             'avatar_changed' => $avatarChanged,
             'avatar_url' => $avatarUrl,
             'avatar_version' => $avatarVersion,
+            'avatar_style' => $user->avatar_style,
+            'avatar_focus' => $user->avatar_focus,
         ];
     }
 

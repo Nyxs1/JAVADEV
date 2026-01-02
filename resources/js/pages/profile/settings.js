@@ -278,16 +278,16 @@ class AccountSettingsManager {
         this.statusText.className = "text-sm text-red-600";
     }
 
-    handleSubmit(e) {
+    async handleSubmit(e) {
+        e.preventDefault();
+
         // Block submit if not available or same
         if (this.state !== "available" && this.state !== "same") {
-            e.preventDefault();
             return;
         }
 
         // If same as original, no need to submit
         if (this.state === "same") {
-            e.preventDefault();
             this.showError("No changes to save.");
             return;
         }
@@ -295,6 +295,39 @@ class AccountSettingsManager {
         // Show saving state
         this.saveBtn.disabled = true;
         this.saveBtn.textContent = "Saving...";
+        this.statusContainer.classList.add("hidden");
+
+        const username = this.usernameInput.value.trim();
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
+
+        try {
+            const response = await fetch(this.form.action, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                body: JSON.stringify({ username }),
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Success - reload page or show success
+                // For username change, reload is safer to update all UI references
+                window.location.reload();
+            } else {
+                this.showError(result.message || "Failed to update username.");
+                this.saveBtn.disabled = false;
+                this.saveBtn.textContent = "Save Username";
+            }
+        } catch (error) {
+            console.error(error);
+            this.showError("An error occurred. Please try again.");
+            this.saveBtn.disabled = false;
+            this.saveBtn.textContent = "Save Username";
+        }
     }
 }
 

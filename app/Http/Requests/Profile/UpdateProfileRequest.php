@@ -20,6 +20,10 @@ class UpdateProfileRequest extends FormRequest
             'bio' => ['nullable', 'string', 'max:1000'],
             'cropped_avatar' => ['nullable', 'string'],
             'remove_avatar' => ['nullable', 'string'],
+            // Avatar focus/position data
+            'avatar_zoom' => ['nullable', 'numeric', 'min:0.01', 'max:10'],
+            'avatar_pan_x' => ['nullable', 'numeric'],
+            'avatar_pan_y' => ['nullable', 'numeric'],
         ];
     }
 
