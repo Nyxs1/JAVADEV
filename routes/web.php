@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\Landing\HomeController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\RegisterController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -41,20 +41,20 @@ Route::post('/reset-password', [AuthController::class, 'resetPassword'])
 /* ONBOARDING ROUTES             */
 /* ============================= */
 Route::middleware('auth')->group(function () {
-    Route::get('/onboarding', [App\Http\Controllers\OnboardingController::class, 'index'])->name('onboarding.index');
-    Route::post('/onboarding', [App\Http\Controllers\OnboardingController::class, 'store'])->name('onboarding.store');
+    Route::get('/onboarding', [App\Http\Controllers\Profile\OnboardingController::class, 'index'])->name('onboarding.index');
+    Route::post('/onboarding', [App\Http\Controllers\Profile\OnboardingController::class, 'store'])->name('onboarding.store');
 });
 
 /* ============================= */
 /* EVENT ROUTES                  */
 /* ============================= */
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\EventDetailController;
-use App\Http\Controllers\EventRequirementsController;
-use App\Http\Controllers\EventReviewController;
-use App\Http\Controllers\EventChecklistController;
-use App\Http\Controllers\EventParticipantController;
-use App\Http\Controllers\MyEventsController;
+use App\Http\Controllers\Event\EventController;
+use App\Http\Controllers\Event\EventDetailController;
+use App\Http\Controllers\Event\EventRequirementsController;
+use App\Http\Controllers\Event\EventReviewController;
+use App\Http\Controllers\Event\EventChecklistController;
+use App\Http\Controllers\Event\EventParticipantController;
+use App\Http\Controllers\Event\MyEventsController;
 
 // Public event listing
 Route::get('/events', [EventController::class, 'index'])->name('events.index');
@@ -90,7 +90,7 @@ Route::middleware('auth')->group(function () {
 /* ============================= */
 /* USERS DASHBOARD ROUTES        */
 /* ============================= */
-use App\Http\Controllers\UsersDashboardController;
+use App\Http\Controllers\Dashboard\UsersDashboardController;
 
 Route::middleware('auth')->name('users.')->group(function () {
     // Mentor action routes (requires mentor or admin role)
@@ -127,6 +127,39 @@ Route::middleware('auth')->name('users.')->group(function () {
 });
 
 /* ============================= */
+/* DASHBOARD - PORTFOLIO         */
+/* ============================= */
+use App\Http\Controllers\Dashboard\PortfolioController;
+use App\Http\Controllers\Dashboard\PortfolioScreenshotController;
+use App\Http\Controllers\Dashboard\UserCourseController;
+use App\Http\Controllers\Dashboard\EvidenceController;
+
+Route::middleware('auth')->prefix('dashboard')->name('dashboard.')->group(function () {
+    // Portfolio CRUD
+    Route::get('/portfolio', [PortfolioController::class, 'index'])->name('portfolio.index');
+    Route::post('/portfolio', [PortfolioController::class, 'store'])->name('portfolio.store');
+    Route::post('/portfolio/upsert', [PortfolioController::class, 'upsert'])->name('portfolio.upsert');
+    Route::put('/portfolio/{portfolio}', [PortfolioController::class, 'update'])->name('portfolio.update');
+    Route::delete('/portfolio/{portfolio}', [PortfolioController::class, 'destroy'])->name('portfolio.destroy');
+    Route::post('/portfolio/{portfolio}/publish', [PortfolioController::class, 'publish'])->name('portfolio.publish');
+    Route::post('/portfolio/{portfolio}/unpublish', [PortfolioController::class, 'unpublish'])->name('portfolio.unpublish');
+
+    // Portfolio Screenshots
+    Route::delete('/portfolio-screenshots/{screenshot}', [PortfolioScreenshotController::class, 'destroy'])->name('portfolio.screenshots.destroy');
+
+    // Courses Management
+    Route::get('/courses', [UserCourseController::class, 'index'])->name('courses.index');
+    Route::post('/courses', [UserCourseController::class, 'storeDemoEnrollment'])->name('courses.store');
+    Route::post('/courses/{userCourse}/publish', [UserCourseController::class, 'publish'])->name('courses.publish');
+    Route::post('/courses/{userCourse}/unpublish', [UserCourseController::class, 'unpublish'])->name('courses.unpublish');
+
+    // Evidence Management
+    Route::post('/evidence', [EvidenceController::class, 'store'])->name('evidence.store');
+    Route::delete('/evidence/{evidence}', [EvidenceController::class, 'destroy'])->name('evidence.destroy');
+});
+
+
+/* ============================= */
 /* PROFILE ROUTES                */
 /* ============================= */
 Route::middleware('auth')->group(function () {
@@ -136,26 +169,25 @@ Route::middleware('auth')->group(function () {
     })->name('profile.index');
 
     // Account Settings
-    Route::get('/settings', [App\Http\Controllers\ProfileController::class, 'settings'])->name('profile.settings');
-    Route::put('/settings/account', [App\Http\Controllers\ProfileController::class, 'updateAccount'])->name('profile.update-account');
-    Route::post('/settings/check-username', [App\Http\Controllers\ProfileController::class, 'checkUsername'])->name('profile.check-username');
+    Route::get('/settings', [App\Http\Controllers\Profile\ProfileController::class, 'settings'])->name('profile.settings');
+    Route::put('/settings/account', [App\Http\Controllers\Profile\ProfileController::class, 'updateAccount'])->name('profile.update-account');
+    Route::post('/settings/check-username', [App\Http\Controllers\Profile\ProfileController::class, 'checkUsername'])->name('profile.check-username');
 
     // Username change (Instagram-style)
-    Route::get('/settings/username/check', [App\Http\Controllers\ProfileController::class, 'checkUsernameAvailability'])->name('settings.username.check');
-    Route::post('/settings/username', [App\Http\Controllers\ProfileController::class, 'updateUsername'])->name('settings.username.update');
+    Route::get('/settings/username/check', [App\Http\Controllers\Profile\ProfileController::class, 'checkUsernameAvailability'])->name('settings.username.check');
+    Route::post('/settings/username', [App\Http\Controllers\Profile\ProfileController::class, 'updateUsername'])->name('settings.username.update');
 
     // Profile actions
-    Route::put('/profile', [App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
-    Route::post('/profile/role-request', [App\Http\Controllers\ProfileController::class, 'requestRoleChange'])->name('profile.role-request');
-    Route::post('/profile/privacy', [App\Http\Controllers\ProfileController::class, 'updatePrivacy'])->name('profile.privacy');
-    Route::post('/profile/visibility', [App\Http\Controllers\ProfileController::class, 'updateVisibility'])->name('profile.visibility');
-    Route::post('/profile/change-password', [App\Http\Controllers\ProfileController::class, 'changePassword'])->name('profile.change-password');
-    Route::post('/profile/avatar-focus', [App\Http\Controllers\ProfileController::class, 'updateAvatarFocus'])->name('profile.avatar-focus');
+    Route::put('/profile', [App\Http\Controllers\Profile\ProfileController::class, 'update'])->name('profile.update');
+    Route::post('/profile/role-request', [App\Http\Controllers\Profile\ProfileController::class, 'requestRoleChange'])->name('profile.role-request');
+    Route::post('/profile/visibility', [App\Http\Controllers\Profile\ProfileController::class, 'updateVisibility'])->name('profile.visibility');
+    Route::post('/profile/change-password', [App\Http\Controllers\Profile\ProfileController::class, 'changePassword'])->name('profile.change-password');
+    Route::post('/profile/avatar-focus', [App\Http\Controllers\Profile\ProfileController::class, 'updateAvatarFocus'])->name('profile.avatar-focus');
 
     // Skills management
-    Route::post('/profile/skills', [App\Http\Controllers\ProfileController::class, 'storeSkill'])->name('profile.skills.store');
-    Route::put('/profile/skills/{skill}', [App\Http\Controllers\ProfileController::class, 'updateSkill'])->name('profile.skills.update');
-    Route::delete('/profile/skills/{skill}', [App\Http\Controllers\ProfileController::class, 'destroySkill'])->name('profile.skills.destroy');
+    Route::post('/profile/skills', [App\Http\Controllers\Profile\ProfileController::class, 'storeSkill'])->name('profile.skills.store');
+    Route::put('/profile/skills/{skill}', [App\Http\Controllers\Profile\ProfileController::class, 'updateSkill'])->name('profile.skills.update');
+    Route::delete('/profile/skills/{skill}', [App\Http\Controllers\Profile\ProfileController::class, 'destroySkill'])->name('profile.skills.destroy');
 });
 
 // Username-based routes (must be last to avoid collision with static routes)
@@ -165,7 +197,7 @@ Route::get('/{username}', [UsersDashboardController::class, 'index'])
     ->name('users.dashboard');
 
 // Public profile routes (accessible by username)
-Route::get('/{username}/profile', [App\Http\Controllers\ProfileController::class, 'show'])
+Route::get('/{username}/profile', [App\Http\Controllers\Profile\ProfileController::class, 'show'])
     ->where('username', '[a-zA-Z0-9_]+')
     ->name('profile.show');
 

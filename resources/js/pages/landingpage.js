@@ -326,8 +326,8 @@ function setupSectionAnimations() {
     });
 }
 
-// Make function globally available
-window.scrollToNextSection = scrollToNextSection;
+// Note: scrollToNextSection is no longer exported to window
+// It is bound via event listener on elements with [data-scroll-to-next]
 
 // Debounced resize handler
 let resizeTimeout;
@@ -469,15 +469,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("✅ Advanced scroll performance optimization enabled");
 
-    // Setup scroll button
-    const scrollButton = document.getElementById("scroll-down-btn");
-    if (scrollButton) {
-        scrollButton.addEventListener("click", (e) => {
+    // Setup scroll button via data-attribute (no inline onclick)
+    const scrollButtons = document.querySelectorAll('[data-scroll-to-next]');
+    scrollButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             scrollToNextSection();
         });
-        console.log("✅ Scroll button ready");
+    });
+    if (scrollButtons.length > 0) {
+        console.log(`✅ ${scrollButtons.length} scroll button(s) ready`);
     }
 
     // Setup section animations

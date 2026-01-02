@@ -142,7 +142,7 @@ class ProfileManager {
          * Transform formula:
          * transform: translate(-50%, -50%) translate(panX, panY) scale(finalScale)
          */
-         const updateImageTransform = (animate = false) => {
+        const updateImageTransform = (animate = false) => {
             if (!img || !imgNaturalW || !imgNaturalH || !baseCoverScale) return;
 
             // Get REAL frame size from DOM (responsive)
@@ -157,7 +157,7 @@ class ProfileManager {
 
             // Calculate "freedom" to pan - CENTER-BASED COORDINATES
             // panX = 0, panY = 0 means IMAGE IS CENTERED (not stuck to left/top)
-            
+
             // Calculate excess area (how much image extends beyond frame)
             const excessW = scaledW - frameW;
             const excessH = scaledH - frameH;
@@ -172,7 +172,7 @@ class ProfileManager {
             // This prevents "stuck to left" feeling - image can move freely
             const softBoundX = frameW * 0.35;
             const softBoundY = frameH * 0.35;
-            
+
             maxPanX = Math.max(maxPanX, softBoundX);
             maxPanY = Math.max(maxPanY, softBoundY);
 
@@ -482,6 +482,7 @@ class ProfileManager {
 
         changeBtn?.addEventListener("click", (e) => {
             e.stopPropagation();
+            input.value = ""; // Reset to allow re-selecting same file
             input.click();
         });
 
@@ -698,7 +699,7 @@ class ProfileManager {
             // Actually, we want the WYSIWYG result.
             // If scale < cover, we see the blur behind.
             // Canvas MUST reflect that.
-            
+
             // 1. Draw blurred background extended
             // OR... simplified: if user zoomed out, they get the whitespace/blur?
             // "Default image fills container... Zoom Out allowed... Empty space handling"
@@ -706,7 +707,7 @@ class ProfileManager {
             // The prompt says "One photo source only... Default image fills container (cover)".
             // If we save the "cropped square" we commit the zoom.
             // If the user zoomed out, we probably want to burn the blurred background into the avatar so it looks right everywhere.
-            
+
             // Fill with black or white first?
             ctx.fillStyle = "#f1f5f9"; // slate-100
             ctx.fillRect(0, 0, CROP_SIZE, CROP_SIZE);
@@ -715,25 +716,25 @@ class ProfileManager {
             // We can approximate the blur by drawing the image scaled up and using filter
             // But canvas filter support varies. 
             // Simple approach: Draw image covering full canvas first (for the bg), then draw main image.
-            
+
             // Draw BG (Cover)
-             if (imgWidth < CROP_SIZE || imgHeight < CROP_SIZE) {
+            if (imgWidth < CROP_SIZE || imgHeight < CROP_SIZE) {
                 // Calculate cover dimensions for the BG
                 const bgScale = Math.max(CROP_SIZE / imgNaturalW, CROP_SIZE / imgNaturalH);
                 const bgW = imgNaturalW * bgScale;
                 const bgH = imgNaturalH * bgScale;
                 const bgX = (CROP_SIZE - bgW) / 2;
                 const bgY = (CROP_SIZE - bgH) / 2;
-                
+
                 ctx.save();
                 ctx.filter = 'blur(10px)'; // Standard canvas filter
                 // Scale up slightly to avoid edge artifacts
                 ctx.drawImage(img, bgX - 10, bgY - 10, bgW + 20, bgH + 20);
                 ctx.restore();
-                
+
                 // Overlay to darken like CSS
                 ctx.fillStyle = "rgba(255, 255, 255, 0.1)";
-                ctx.fillRect(0,0, CROP_SIZE, CROP_SIZE);
+                ctx.fillRect(0, 0, CROP_SIZE, CROP_SIZE);
             }
 
             // Draw Main Image
@@ -745,6 +746,23 @@ class ProfileManager {
             } catch (err) {
                 console.error("Failed to generate cropped avatar:", err);
             }
+        };
+
+        // Expose focus data getter for submit handler
+        // NOTE: Save only userZoom because view mode uses object-fit:cover for base coverage
+        this.getAvatarFocusData = () => {
+            // Get REAL frame size from DOM (responsive)
+            const { frameW, frameH } = getFrameSize();
+            const panXNorm = frameW > 0 ? panX / frameW : 0;
+            const panYNorm = frameH > 0 ? panY / frameH : 0;
+
+            return {
+                zoom: userZoom, // Just user zoom, view mode handles base coverage with object-fit:cover
+                panX: panX,
+                panY: panY,
+                panXNorm: panXNorm,
+                panYNorm: panYNorm
+            };
         };
     }
 
@@ -771,6 +789,9 @@ class ProfileManager {
         });
     }
 
+    // NOTE: getAvatarFocusData is assigned dynamically in initProfilePicture() as a closure
+    // that captures the actual panX/panY/userZoom state. Do NOT define it as a class method here!
+
     initFormSubmit() {
         if (!this.profileForm) return;
 
@@ -789,6 +810,25 @@ class ProfileManager {
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.textContent = "Saving...";
+            }
+
+
+            // Populate hidden inputs for Avatar Focus
+            if (typeof this.getAvatarFocusData === 'function') {
+                const focusData = this.getAvatarFocusData();
+
+                // Update input values
+                const zoomInput = document.getElementById("avatar_zoom");
+                const panXInput = document.getElementById("avatar_pan_x");
+                const panYInput = document.getElementById("avatar_pan_y");
+
+                if (zoomInput) zoomInput.value = focusData.zoom || 1;
+                if (panXInput) panXInput.value = focusData.panXNorm || 0;
+                if (panYInput) panYInput.value = focusData.panYNorm || 0;
+
+                console.log("[Profile] Saving focus data:", focusData);
+            } else {
+                console.warn("[Profile] getAvatarFocusData not available");
             }
 
             try {
@@ -840,7 +880,9 @@ class ProfileManager {
                     // Update all avatar instances across the page
                     ProfileManager.updateAllAvatars(
                         data.avatar_url,
-                        data.avatar_version
+                        data.avatar_version,
+                        data.avatar_style,
+                        data.avatar_focus
                     );
 
                     // Show success feedback
@@ -861,10 +903,7 @@ class ProfileManager {
                         removeAvatarInput.value = "0";
                     }
 
-                    // Reload page to show updated data after short delay
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 800);
+                    // Avatar update is already handled by updateAllAvatars - no page reload needed
                 } else {
                     ProfileManager.showToast(
                         data.message || "Failed to update profile.",
@@ -892,8 +931,10 @@ class ProfileManager {
      * Uses data attributes to find avatar elements.
      * @param {string|null} avatarUrl - New avatar URL (already cache-busted), or null to show fallback
      * @param {number} version - Version timestamp for cache-busting (optional)
+     * @param {string|null} avatarStyle - CSS style string for banner pan/zoom (optional)
+     * @param {object|null} avatarFocus - Raw focus data {zoom, panX, panY} for computing circle styles (optional)
      */
-    static updateAllAvatars(avatarUrl, version = null) {
+    static updateAllAvatars(avatarUrl, version = null, avatarStyle = null, avatarFocus = null) {
         // Find all avatar images and fallbacks directly
         const avatarImgs = document.querySelectorAll("[data-avatar-img]");
         const avatarFallbacks = document.querySelectorAll(
@@ -903,6 +944,8 @@ class ProfileManager {
         console.log("[Avatar] updateAllAvatars called:", {
             avatarUrl,
             version,
+            style: !!avatarStyle,
+            focus: avatarFocus,
             imgsFound: avatarImgs.length,
             fallbacksFound: avatarFallbacks.length,
         });
@@ -913,14 +956,68 @@ class ProfileManager {
             finalUrl = avatarUrl + "?v=" + version;
         }
 
+        /**
+         * Compute circle-specific style from avatar focus data
+         * Mirrors the PHP logic in avatar.blade.php
+         */
+        const focusToPos = (focus) => {
+            const zoom = Number(focus?.zoom ?? 1.0);
+            const panX = Number(focus?.panX ?? 0);
+            const panY = Number(focus?.panY ?? 0);
+
+            // CONSISTENT dengan User.php: * 50
+            let posX = 50 - (panX * 50);
+            let posY = 50 - (panY * 50);
+
+            posX = Math.max(0, Math.min(100, posX));
+            posY = Math.max(0, Math.min(100, posY));
+
+            return { zoom, posX, posY };
+        };
+
+        // Circle mapping uses the same coordinate system as banner.
+        // Onboarding now stores focus as x/y (0..1) which converts consistently to panX/panY.
+        const focusToPosCircle = (focus) => focusToPos(focus);
+
+        const getCircleStyle = (focus) => {
+            if (!focus) return "";
+            const { zoom, posX, posY } = focusToPosCircle(focus);
+            return `object-position: ${posX}% ${posY}%; transform: scale(${zoom}); transform-origin: ${posX}% ${posY}%;`;
+        };
+
+        const getBannerStyle = (focus) => {
+            if (!focus) return "";
+            const { zoom, posX, posY } = focusToPos(focus);
+            return `object-position: ${posX}% ${posY}%; transform: scale(${zoom}); transform-origin: ${posX}% ${posY}%;`;
+        };
+
         if (finalUrl) {
             // Show images, hide fallbacks
             avatarImgs.forEach((img) => {
                 console.log(
                     "[Avatar] Setting img src:",
-                    img.dataset.avatarImg || "unknown"
+                    img.dataset.avatarImg || "unknown",
+                    "shape:",
+                    img.dataset.avatarShape || "unknown"
                 );
                 img.src = finalUrl;
+
+                // Apply shape-specific CSS transforms
+                const shape = img.dataset.avatarShape || "circle";
+
+                if (avatarFocus) {
+                    if (shape === "circle") {
+                        img.setAttribute("style", getCircleStyle(avatarFocus));
+                    } else if (shape === "banner") {
+                        img.setAttribute("style", getBannerStyle(avatarFocus));
+                    } else if (avatarStyle) {
+                        // fallback buat shape lain
+                        img.setAttribute("style", avatarStyle);
+                    }
+                } else if (avatarStyle && shape !== "circle") {
+                    img.setAttribute("style", avatarStyle);
+                }
+
                 img.classList.remove("hidden");
                 img.style.display = "";
             });

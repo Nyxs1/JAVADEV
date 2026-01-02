@@ -17,7 +17,7 @@
     {{-- PROFILE COVER (HORIZONTAL) - MIRRORS PROFILE DISPLAY EXACTLY --}}
     <div class="mb-8" id="profile-upload-section">
         {{-- Cover Frame (SAME as Profile) --}}
-        <x-profile.photo-frame :src="null" :alt="'Profile Cover'"
+        <x-profile.photo-frame :user="$user" :src="null" :alt="'Profile Cover'"
             :fallback-initial="substr($user->username ?? 'U', 0, 1)" :show-editor="true" :has-image="false" />
 
         {{-- Hidden Inputs --}}
@@ -55,9 +55,18 @@
                 class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 transition-colors">
                 Reset
             </button>
-            <button type="button" id="avatar-delete"
-                class="px-4 py-2 bg-white border border-red-200 text-red-600 rounded-lg text-sm font-medium hover:bg-red-50 transition-colors">
-                Remove
+            <button type="button" id="avatar-delete" class="group inline-flex items-center gap-2 px-4 py-2.5 
+                       bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 
+                       text-red-600 rounded-xl text-sm font-medium 
+                       hover:from-red-500 hover:to-pink-500 hover:text-white hover:border-transparent
+                       hover:shadow-lg hover:shadow-red-500/25
+                       transition-all duration-300 ease-out">
+                <svg class="w-4 h-4 transition-transform group-hover:scale-110 group-hover:rotate-12" fill="none"
+                    stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span class="group-hover:tracking-wide transition-all">Hapus</span>
             </button>
         </div>
 

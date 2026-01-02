@@ -43,7 +43,7 @@
     transition: all 0.2s ease;
 }
 
-.focus-area-card .focus-area-input:checked + .focus-area-content {
+.focus-area-card .focus-area-input:checked+.focus-area-content {
     border-color: #2563eb;
     background-color: #eff6ff;
 }
@@ -58,7 +58,7 @@
     transition: all 0.2s ease;
 }
 
-.role-card .role-input:checked + .role-content {
+.role-card .role-input:checked+.role-content {
     border-color: #2563eb;
     background-color: #eff6ff;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -144,6 +144,7 @@ button:active {
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -155,6 +156,7 @@ button:active {
         opacity: 0;
         transform: translateX(20px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -175,13 +177,7 @@ button:active {
         padding: 1rem;
     }
 
-    .grid.grid-cols-2.md\\:grid-cols-3 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .grid.grid-cols-1.md\\:grid-cols-2 {
-        grid-template-columns: 1fr;
-    }
+    /* Responsive grid handled by Tailwind classes */
 }
 
 /* Loading State */
@@ -200,13 +196,16 @@ button:active {
 }
 
 @keyframes shake {
+
     0%,
     100% {
         transform: translateX(0);
     }
+
     25% {
         transform: translateX(-5px);
     }
+
     75% {
         transform: translateX(5px);
     }
