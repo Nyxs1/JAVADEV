@@ -30,6 +30,9 @@
                 <input type="file" name="profile_picture" id="profile_picture" accept="image/jpeg,image/jpg,image/png,image/gif" class="hidden">
                 <input type="hidden" name="cropped_avatar" id="cropped_avatar" value="">
                 <input type="hidden" name="remove_avatar" id="remove_avatar" value="0">
+                <input type="hidden" name="avatar_zoom" id="avatar_zoom" value="1">
+                <input type="hidden" name="avatar_pan_x" id="avatar_pan_x" value="0">
+                <input type="hidden" name="avatar_pan_y" id="avatar_pan_y" value="0">
                 <canvas id="avatar-canvas" class="hidden" width="768" height="256"></canvas>
             </div>
 

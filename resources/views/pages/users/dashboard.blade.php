@@ -12,15 +12,7 @@
                         {{-- User Info --}}
                         <div class="p-4 border-b border-slate-200">
                             <div class="flex items-center gap-3">
-                                @if($user->avatar)
-                                    <img src="{{ asset('storage/' . $user->avatar) }}" alt=""
-                                        class="w-10 h-10 rounded-full object-cover">
-                                @else
-                                    <div
-                                        class="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
-                                        {{ strtoupper(substr($user->username, 0, 1)) }}
-                                    </div>
-                                @endif
+                                <x-avatar :user="$user" size="md" shape="circle" data-avatar="dashboard" />
                                 <div class="flex-1 min-w-0">
                                     <p class="font-semibold text-slate-900 truncate">{{ $user->username }}</p>
                                     <p class="text-xs text-slate-500">{{ $user->role?->name ?? 'Member' }}</p>

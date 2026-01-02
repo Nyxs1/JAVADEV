@@ -1,7 +1,7 @@
 @props(['skill'])
 
 @php
-    use App\Enums\SkillLevel;
+    use App\Http\Support\Enums\SkillLevel;
 
     $level = SkillLevel::fromValue($skill->level);
     $levelLabel = $level->label();

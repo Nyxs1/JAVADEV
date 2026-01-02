@@ -4,7 +4,7 @@ namespace App\Services\Dashboard;
 
 use App\Models\Event;
 use App\Models\User;
-use App\Support\Dashboard\DashboardContext;
+use App\Services\Shared\Dashboard\DashboardContext;
 
 /**
  * Handles mentor tab data loading.

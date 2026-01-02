@@ -17,7 +17,7 @@
     {{-- PROFILE COVER (HORIZONTAL) - MIRRORS PROFILE DISPLAY EXACTLY --}}
     <div class="mb-8" id="profile-upload-section">
         {{-- Cover Frame (SAME as Profile) --}}
-        <x-profile.photo-frame :src="null" :alt="'Profile Cover'"
+        <x-profile.photo-frame :user="$user" :src="null" :alt="'Profile Cover'"
             :fallback-initial="substr($user->username ?? 'U', 0, 1)" :show-editor="true" :has-image="false" />
 
         {{-- Hidden Inputs --}}
@@ -27,7 +27,7 @@
         <input type="hidden" name="avatar_zoom" id="avatar_zoom_input" value="1">
         <input type="hidden" name="avatar_pan_x" id="avatar_pan_x_input" value="0">
         <input type="hidden" name="avatar_pan_y" id="avatar_pan_y_input" value="0">
-        <canvas id="avatar-canvas" class="hidden" width="768" height="256"></canvas>
+        <canvas id="avatar-canvas" class="hidden" width="256" height="256"></canvas>
 
         {{-- Zoom Controls --}}
         <div id="avatar-zoom-container" class="hidden flex items-center justify-center gap-4 mt-4">

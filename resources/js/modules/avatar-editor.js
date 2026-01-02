@@ -63,7 +63,7 @@ export class AvatarEditor {
         // Check for existing image
         const imgSrc = this.img?.getAttribute('src');
         this.hasExistingImage = imgSrc && imgSrc !== '' && !imgSrc.includes('undefined');
-        
+
         if (this.hasExistingImage && this.img?.src) {
             this.initExistingImage();
         }
@@ -92,7 +92,7 @@ export class AvatarEditor {
     // ========================================
     // HELPER: Get frame size from DOM
     // ========================================
-    
+
     getFrameSize() {
         const rect = this.dropzone.getBoundingClientRect();
         return { frameW: rect.width, frameH: rect.height };
@@ -186,7 +186,7 @@ export class AvatarEditor {
     // ========================================
     // EXISTING IMAGE
     // ========================================
-    
+
     initExistingImage() {
         if (!this.img) return;
 
@@ -365,10 +365,10 @@ export class AvatarEditor {
     startPan(e) {
         if (!this.hasExistingImage) return;
         e.preventDefault();
-        
+
         this.isDragging = true;
         this.imgContainer.style.cursor = 'grabbing';
-        
+
         const pos = this.getEventPosition(e);
         this.dragStart = pos;
         this.panStartX = this.panX;
@@ -380,7 +380,7 @@ export class AvatarEditor {
         e.preventDefault();
 
         const pos = this.getEventPosition(e);
-        
+
         this.panX = this.panStartX + (pos.x - this.dragStart.x);
         this.panY = this.panStartY + (pos.y - this.dragStart.y);
 
@@ -473,8 +473,10 @@ export class AvatarEditor {
     setupButtons() {
         this.changeBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
+            if (this.fileInput) this.fileInput.value = ""; // penting biar same-file ke-trigger
             this.fileInput?.click();
         });
+
 
         this.resetBtn?.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -531,6 +533,9 @@ export class AvatarEditor {
 
 // Auto-initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Prevent double initialization on onboarding page (handled by OnboardingManager)
+    if (document.getElementById('onboarding-form')) return;
+
     if (document.getElementById('avatar-dropzone')) {
         window.avatarEditor = new AvatarEditor();
     }

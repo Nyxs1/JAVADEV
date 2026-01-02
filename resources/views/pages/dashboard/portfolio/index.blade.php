@@ -47,8 +47,8 @@
                     <h2 class="text-lg font-semibold text-slate-900">Portfolio Kamu</h2>
                     <p class="text-sm text-slate-500">{{ $portfolios->count() }} portfolio</p>
                 </div>
-                <button type="button" onclick="openPortfolioWizard()"
-                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                <button type="button" data-open-portfolio-wizard
+                    class="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-150 font-medium hover:scale-[1.02] active:scale-[0.98] shadow-md shadow-blue-200">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                     </svg>
@@ -90,12 +90,12 @@
 
     {{-- Evidence Add Modal --}}
     <div id="evidence-modal" class="fixed inset-0 z-50 hidden">
-        <div class="absolute inset-0 bg-black/50" onclick="closeEvidenceModal()"></div>
+        <div class="absolute inset-0 bg-black/50" data-close-evidence-overlay></div>
         <div class="absolute inset-0 flex items-center justify-center p-4">
             <div class="bg-white rounded-xl shadow-xl w-full max-w-md">
                 <div class="p-6 border-b border-slate-200 flex items-center justify-between">
                     <h2 class="text-lg font-semibold text-slate-900">Tambah Evidence</h2>
-                    <button type="button" onclick="closeEvidenceModal()"
+                    <button type="button" data-close-evidence-modal
                         class="p-2 text-slate-400 hover:text-slate-600 rounded-lg transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -136,7 +136,7 @@
                     </div>
 
                     <div class="flex justify-end gap-3 pt-4 border-t border-slate-200">
-                        <button type="button" onclick="closeEvidenceModal()"
+                        <button type="button" data-close-evidence-modal
                             class="px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors">
                             Cancel
                         </button>
@@ -150,27 +150,10 @@
         </div>
     </div>
 
-    <script>
-        // Evidence modal functions
-        function openEvidenceModal(itemType, itemId) {
-            document.getElementById('evidence-item-type').value = itemType;
-            document.getElementById('evidence-item-id').value = itemId;
-            document.getElementById('evidence-modal').classList.remove('hidden');
-        }
-
-        function closeEvidenceModal() {
-            document.getElementById('evidence-modal').classList.add('hidden');
-            document.getElementById('evidence-form').reset();
-        }
-
-        // Close modal on escape key
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                closeEvidenceModal();
-            }
-        });
-    </script>
-
     {{-- Portfolio Wizard Modal --}}
     <x-dashboard.portfolio-wizard-modal :userCourses="$userCourses" />
 @endsection
+
+@push('scripts')
+    @vite('resources/js/pages/dashboard/portfolio.js')
+@endpush

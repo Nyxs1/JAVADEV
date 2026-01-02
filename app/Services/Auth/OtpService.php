@@ -2,12 +2,10 @@
 
 namespace App\Services\Auth;
 
-use App\Actions\Auth\GenerateOtp;
-use App\Actions\Auth\VerifyOtp;
-use App\Actions\Auth\CheckOtpCooldown;
-use App\Mail\VerificationCodeMail;
-use App\Support\Constants\OtpConfig;
-use Illuminate\Support\Facades\Mail;
+use App\Services\Auth\Actions\GenerateOtp;
+use App\Services\Auth\Actions\VerifyOtp;
+use App\Services\Auth\Actions\CheckOtpCooldown;
+use App\Services\Shared\Constants\OtpConfig;
 use Illuminate\Support\Facades\Log;
 
 class OtpService
@@ -15,7 +13,8 @@ class OtpService
     public function __construct(
         private GenerateOtp $generateOtp,
         private VerifyOtp $verifyOtp,
-        private CheckOtpCooldown $checkCooldown
+        private CheckOtpCooldown $checkCooldown,
+        private VerificationMailService $mailService
     ) {
     }
 
@@ -51,11 +50,7 @@ class OtpService
 
         // Send email (only in production)
         if (!$this->isDevMode()) {
-            try {
-                Mail::to($email)->send(new VerificationCodeMail($code, $email));
-            } catch (\Exception $e) {
-                Log::error('Failed to send verification email: ' . $e->getMessage());
-            }
+            $this->mailService->send($email, $code, OtpConfig::EXPIRY_MINUTES);
         }
 
         $response = [

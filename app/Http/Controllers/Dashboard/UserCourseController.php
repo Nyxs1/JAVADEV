@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserCourse;
-use App\Support\Traits\JsonResponses;
+use App\Http\Support\Traits\JsonResponses;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

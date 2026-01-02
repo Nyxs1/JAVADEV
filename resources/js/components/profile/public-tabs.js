@@ -1,9 +1,4 @@
-/**
- * Public Tabs Component
- * Handles tab switching for public profile sections (Portfolio, Courses, Discussions)
- */
-
-class PublicTabs {
+export class PublicTabs {
     constructor() {
         this.container = document.getElementById("public-tabs-container");
         if (!this.container) return;
@@ -11,18 +6,34 @@ class PublicTabs {
         this.tabs = this.container.querySelectorAll(".public-tab");
         this.contents = this.container.querySelectorAll(".public-content");
 
+        // Guard: if no tabs found, do nothing
+        if (this.tabs.length === 0) return;
+
         this.init();
     }
 
     init() {
         this.initTabSwitching();
+        
+        // Restore active tab from localStorage if available
+        const savedTab = localStorage.getItem('javadev_active_public_tab');
+        if (savedTab) {
+            const tabToActivate = this.container.querySelector(`[data-tab="${savedTab}"]`);
+            if (tabToActivate) {
+                this.switchTab(savedTab);
+            }
+        }
     }
 
     initTabSwitching() {
         this.tabs.forEach((tab) => {
             tab.addEventListener("click", () => {
                 const targetTab = tab.dataset.tab;
+                if (!targetTab) return;
                 this.switchTab(targetTab);
+                
+                // Save state
+                localStorage.setItem('javadev_active_public_tab', targetTab);
             });
         });
     }
@@ -56,25 +67,40 @@ class PublicTabs {
 /**
  * Private Details Toggle
  * Handles collapsible private details section on profile page
+ * PERSISTS STATE via LocalStorage
  */
 class PrivateDetailsToggle {
     constructor() {
         this.toggleBtn = document.querySelector("[data-toggle-private]");
         this.content = document.querySelector("[data-private-content]");
         this.icon = document.querySelector("[data-toggle-icon]");
+        this.STORAGE_KEY = 'javadev_private_details_open';
 
         if (!this.toggleBtn || !this.content) return;
 
-        this.isOpen = false;
+        // Load initial state
+        const savedState = localStorage.getItem(this.STORAGE_KEY);
+        this.isOpen = savedState === 'true';
+        
+        // Apply initial state without animation
+        if (this.isOpen) {
+            this.content.classList.remove("hidden");
+            this.icon?.classList.add("rotate-180");
+        }
+
         this.init();
     }
 
     init() {
-        this.toggleBtn.addEventListener("click", () => this.toggle());
+        this.toggleBtn.addEventListener("click", (e) => {
+            e.preventDefault(); 
+            this.toggle();
+        });
     }
 
     toggle() {
         this.isOpen = !this.isOpen;
+        localStorage.setItem(this.STORAGE_KEY, this.isOpen);
 
         if (this.isOpen) {
             this.content.classList.remove("hidden");
@@ -88,8 +114,12 @@ class PrivateDetailsToggle {
 
 // Initialize when DOM is loaded
 document.addEventListener("DOMContentLoaded", () => {
-    new PublicTabs();
-    new PrivateDetailsToggle();
+    // Only init if containers exist
+    if (document.getElementById("public-tabs-container")) {
+        new PublicTabs();
+    }
+    
+    if (document.querySelector("[data-toggle-private]")) {
+        new PrivateDetailsToggle();
+    }
 });
-
-export default PublicTabs;

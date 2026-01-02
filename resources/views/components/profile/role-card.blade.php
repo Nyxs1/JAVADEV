@@ -1,6 +1,6 @@
 @props(['user'])
 
-<div class="bg-white rounded-lg border border-slate-200 p-6">
+<div class="bg-white rounded-lg border border-slate-200 p-6" x-data="roleRequestModal()">
     <h3 class="text-lg font-semibold text-slate-900 mb-4">Role Management</h3>
 
     {{-- Current Role --}}
@@ -37,8 +37,8 @@
                             <h4 class="font-medium text-slate-900">Become a Mentor</h4>
                             <p class="text-sm text-slate-600">Share your knowledge and guide other members</p>
                         </div>
-                        <button type="button" onclick="openRoleRequestModal('mentor')"
-                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                        <button type="button" @click="openModal('mentor')"
+                            class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98]">
                             Request
                         </button>
                     </div>
@@ -50,8 +50,8 @@
                             <h4 class="font-medium text-slate-900">Step Down to Member</h4>
                             <p class="text-sm text-slate-600">Return to regular member status</p>
                         </div>
-                        <button type="button" onclick="openRoleRequestModal('member')"
-                            class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                        <button type="button" @click="openModal('member')"
+                            class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98]">
                             Request
                         </button>
                     </div>
@@ -59,39 +59,82 @@
             @endif
         </div>
     @endif
-</div>
 
-{{-- Role Request Modal --}}
-<div id="role-request-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 p-4">
-    {{-- ⬇️ wrapper ini yang pegang flex, jadi nggak tabrakan sama "hidden" --}}
-    <div class="w-full h-full flex items-center justify-center">
-        <div class="bg-white rounded-lg max-w-md w-full p-6">
-            <h3 class="text-lg font-semibold text-slate-900 mb-4" id="modal-title">Request Role Change</h3>
+    {{-- Role Request Modal --}}
+    <div x-show="isOpen" x-cloak class="fixed inset-0 bg-black bg-opacity-50 z-50 p-4"
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @keydown.escape.window="closeModal()">
+        <div class="w-full h-full flex items-center justify-center">
+            <div class="bg-white rounded-lg max-w-md w-full p-6 shadow-xl" x-show="isOpen"
+                x-transition:enter="transition ease-out duration-200 transform"
+                x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                x-transition:leave="transition ease-in duration-150 transform"
+                x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95"
+                @click.stop>
+                <h3 class="text-lg font-semibold text-slate-900 mb-4" x-text="modalTitle">Request Role Change</h3>
 
-            <form method="POST" action="{{ route('profile.role-request') }}" id="role-request-form">
-                @csrf
-                <input type="hidden" name="to_role_id" id="to_role_id">
+                <form method="POST" action="{{ route('profile.role-request') }}">
+                    @csrf
+                    <input type="hidden" name="to_role_id" :value="toRoleId">
 
-                <div class="mb-4">
-                    <label for="reason" class="block text-sm font-medium text-slate-700 mb-2">
-                        Reason for request (optional)
-                    </label>
-                    <textarea name="reason" id="reason" rows="3" placeholder="Why do you want to change your role?"
-                        class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
-                    <p class="text-xs text-slate-500 mt-1">Maximum 500 characters</p>
-                </div>
+                    <div class="mb-4">
+                        <label for="reason" class="block text-sm font-medium text-slate-700 mb-2">
+                            Reason for request (optional)
+                        </label>
+                        <textarea name="reason" id="reason" rows="3" placeholder="Why do you want to change your role?"
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"></textarea>
+                        <p class="text-xs text-slate-500 mt-1">Maximum 500 characters</p>
+                    </div>
 
-                <div class="flex justify-end gap-3">
-                    <button type="button" onclick="closeRoleRequestModal()"
-                        class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors">
-                        Cancel
-                    </button>
-                    <button type="submit"
-                        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                        Submit Request
-                    </button>
-                </div>
-            </form>
+                    <div class="flex justify-end gap-3">
+                        <button type="button" @click="closeModal()"
+                            class="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-all duration-150">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-150 hover:scale-[1.02] active:scale-[0.98]">
+                            Submit Request
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('roleRequestModal', () => ({
+            isOpen: false,
+            toRoleId: null,
+            modalTitle: 'Request Role Change',
+
+            // Role IDs (these should match your database)
+            roleIds: {
+                'mentor': 2,  // Adjust based on your roles table
+                'member': 1,  // Adjust based on your roles table
+            },
+
+            openModal(role) {
+                this.toRoleId = this.roleIds[role] || null;
+                this.modalTitle = role === 'mentor'
+                    ? 'Request to Become Mentor'
+                    : 'Request to Step Down';
+                this.isOpen = true;
+                document.body.style.overflow = 'hidden';
+            },
+
+            closeModal() {
+                this.isOpen = false;
+                document.body.style.overflow = '';
+            }
+        }));
+    });
+</script>
+
+<style>
+    [x-cloak] {
+        display: none !important;
+    }
+</style>

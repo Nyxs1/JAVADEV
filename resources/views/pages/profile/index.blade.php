@@ -20,10 +20,12 @@
                 {{-- ======================================= --}}
                 <div>
                     <x-profile.photo-frame 
+                        :user="$user"
                         :src="$hasAvatar ? $user->avatar_url : null"
                         :alt="$user->full_name ?: $displayUsername"
                         :fallback-initial="substr($displayUsername, 0, 1)"
                         :show-editor="false"
+                        :style="$user->avatar_style"
                     />
                 </div>
 
@@ -59,7 +61,7 @@
                             <div class="flex flex-wrap justify-center gap-4">
                                 @foreach($user->skills as $skill)
                                     @php
-                                        $level = \App\Enums\SkillLevel::fromValue($skill->level);
+                                        $level = \App\Http\Support\Enums\SkillLevel::fromValue($skill->level);
                                         $levelLabel = $level->label();
                                         $levelPercent = $level->percent();
                                         $levelGradient = $level->gradient();
